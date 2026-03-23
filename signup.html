@@ -799,9 +799,121 @@
   /* ═══════════════════════════════════════════
      RESPONSIVE
      ═══════════════════════════════════════════ */
+  /* ═══════════════════════════════════════════
+     ENTRY FEE DISPLAY
+     ═══════════════════════════════════════════ */
+  .fee-display {
+    background: var(--masters-deeper);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  .fee-display-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.7);
+  }
+  .fee-display-amount {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 2rem;
+    color: var(--masters-gold);
+  }
+
+  /* ═══════════════════════════════════════════
+     JUNK BETS
+     ═══════════════════════════════════════════ */
+  .junk-section { margin-top: 2rem; }
+
+  .junk-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border: 2px solid #e0dcd3;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--cream);
+    margin-bottom: 0.65rem;
+    user-select: none;
+  }
+  .junk-card:hover { border-color: var(--masters-gold); background: rgba(212,175,55,0.04); }
+  .junk-card.selected {
+    border-color: var(--masters-green);
+    background: rgba(0,103,71,0.06);
+    box-shadow: 0 0 0 3px rgba(0,103,71,0.1);
+  }
+
+  .junk-checkbox {
+    width: 22px; height: 22px;
+    border: 2px solid #d0c9b8;
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: var(--transition);
+    font-size: 0.8rem;
+    color: var(--white);
+  }
+  .junk-card.selected .junk-checkbox {
+    background: var(--masters-green);
+    border-color: var(--masters-green);
+  }
+
+  .junk-info { flex: 1; }
+  .junk-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--masters-deeper);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .junk-desc {
+    font-size: 0.83rem;
+    color: var(--ink-light);
+    margin-top: 0.2rem;
+    line-height: 1.45;
+  }
+  .junk-price {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--masters-gold);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .total-display {
+    background: var(--masters-deeper);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+  }
+  .total-display-label {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .total-display-amount {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 1.6rem;
+    color: var(--masters-gold);
+  }
+
   @media (max-width: 600px) {
     .panel-card { padding: 1.75rem 1.25rem; }
-    .fee-options { flex-direction: column; }
     .btn-row { flex-direction: column-reverse; }
     .step-line { width: 40px; }
     .pay-method { flex-wrap: wrap; }
@@ -880,22 +992,25 @@
   <section class="step-panel" id="step-3">
     <div class="panel-card">
       <h2 class="panel-title">Entry Fee & Payment</h2>
-      <p class="panel-desc">Choose your entry tier, then send payment via Venmo or Cash App.</p>
+      <p class="panel-desc">Base entry is $30. Add optional junk bets below, then send your total via Venmo.</p>
 
-      <label class="form-label">Select Entry Fee</label>
-      <div class="fee-options">
-        <div class="fee-card" onclick="selectFee(this, 25)" data-fee="25">
-          <div class="fee-amount">$25</div>
-          <div class="fee-label">Standard</div>
-        </div>
-        <div class="fee-card" onclick="selectFee(this, 50)" data-fee="50">
-          <div class="fee-amount">$50</div>
-          <div class="fee-label">High Roller</div>
-        </div>
+      <label class="form-label">Base Entry Fee</label>
+      <div class="fee-display">
+        <span class="fee-display-label">Standard Entry</span>
+        <span class="fee-display-amount">$30</span>
       </div>
-      <p class="error-msg" id="feeError">Please select an entry fee.</p>
 
-      <label class="form-label">Send Payment To</label>
+      <div class="junk-section">
+        <label class="form-label">Add Junk Bets <span style="font-size:0.75rem;text-transform:none;letter-spacing:0;color:#b0a998;">(optional — click to add)</span></label>
+        <div id="junkBets"></div>
+      </div>
+
+      <div class="total-display">
+        <span class="total-display-label">Total Due</span>
+        <span class="total-display-amount" id="runningTotal">$30</span>
+      </div>
+
+      <label class="form-label" style="margin-top:2rem;">Send Payment To</label>
 
       <div class="venmo-qr-section">
         <img src="data:image/png;base64,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" alt="Venmo QR Code — Scan to pay @Zachary-Gagis">
@@ -1064,16 +1179,29 @@
   ];
 
   // ───────────────────────────────────────────
-  // PAYMENT CONFIG (edit these with your real handles)
+  // PAYMENT CONFIG
   // ───────────────────────────────────────────
   const VENMO_HANDLE  = "@Zachary-Gagis";
+  const BASE_FEE = 30;
+
+  // ───────────────────────────────────────────
+  // JUNK BETS
+  // ───────────────────────────────────────────
+  const JUNK_BETS = [
+    { id: 'green_jacket',   name: 'Green Jacket',   price: 2, desc: 'If your player wins the Green Jacket, take off 5 strokes.' },
+    { id: 'choke_artist',   name: 'Choke Artist',   price: 2, desc: 'If your player is leading after 54 holes, take 5 strokes off your score.' },
+    { id: 'scratch_golfer', name: 'Scratch Golfer', price: 3, desc: 'Take off 5 strokes for each player who shoots par or better in all four rounds.' },
+    { id: 'ace',            name: 'Ace',            price: 3, desc: 'Take off 15 strokes every time a player on your team makes an ace.' },
+    { id: 'sandbagger',     name: 'Sandbagger',     price: 5, desc: 'Field a team without a player from Group 1 and take off 5 strokes.' },
+  ];
 
   // ───────────────────────────────────────────
   // STATE
   // ───────────────────────────────────────────
   let currentStep   = 1;
-  let selectedFee   = null;
+  let selectedFee   = BASE_FEE;
   let selections    = {};  // groupIndex -> playerName
+  let selectedJunks = new Set();
 
   // ───────────────────────────────────────────
   // RENDER PLAYER GROUPS
@@ -1173,13 +1301,43 @@
   }
 
   // ───────────────────────────────────────────
-  // FEE SELECTION
+  // JUNK BET RENDERING & TOGGLING
   // ───────────────────────────────────────────
-  function selectFee(el, amount) {
-    document.querySelectorAll('.fee-card').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedFee = amount;
-    document.getElementById('feeError').classList.remove('show');
+  function renderJunkBets() {
+    const container = document.getElementById('junkBets');
+    container.innerHTML = JUNK_BETS.map(j => `
+      <div class="junk-card" id="junk-${j.id}" onclick="toggleJunk('${j.id}')">
+        <div class="junk-checkbox" id="junkcheck-${j.id}"></div>
+        <div class="junk-info">
+          <div class="junk-name">${j.name}</div>
+          <div class="junk-desc">${j.desc}</div>
+        </div>
+        <div class="junk-price">+$${j.price}</div>
+      </div>
+    `).join('');
+  }
+
+  function toggleJunk(id) {
+    const card  = document.getElementById(`junk-${id}`);
+    const check = document.getElementById(`junkcheck-${id}`);
+    if (selectedJunks.has(id)) {
+      selectedJunks.delete(id);
+      card.classList.remove('selected');
+      check.textContent = '';
+    } else {
+      selectedJunks.add(id);
+      card.classList.add('selected');
+      check.textContent = '✓';
+    }
+    updateRunningTotal();
+  }
+
+  function updateRunningTotal() {
+    const junkTotal = JUNK_BETS
+      .filter(j => selectedJunks.has(j.id))
+      .reduce((sum, j) => sum + j.price, 0);
+    selectedFee = BASE_FEE + junkTotal;
+    document.getElementById('runningTotal').textContent = `$${selectedFee}`;
   }
 
   // ───────────────────────────────────────────
@@ -1261,10 +1419,6 @@
     }
 
     if (step === 3) {
-      if (!selectedFee) {
-        document.getElementById('feeError').classList.add('show');
-        valid = false;
-      }
       const conf = document.getElementById('paymentConfirm');
       if (!conf.value.trim()) {
         conf.classList.add('error');
@@ -1356,6 +1510,32 @@
       `;
     });
 
+    // Junk bets in summary
+    const chosenJunks = JUNK_BETS.filter(j => selectedJunks.has(j.id));
+    html += `
+      <div class="summary-row">
+        <span class="summary-label">Base Entry</span>
+        <span class="summary-value">$${BASE_FEE}</span>
+      </div>
+    `;
+    if (chosenJunks.length > 0) {
+      chosenJunks.forEach(j => {
+        html += `
+          <div class="summary-row">
+            <span class="summary-label">Junk: ${j.name}</span>
+            <span class="summary-value">+$${j.price}</span>
+          </div>
+        `;
+      });
+    } else {
+      html += `
+        <div class="summary-row">
+          <span class="summary-label">Junk Bets</span>
+          <span class="summary-value" style="color:var(--ink-light);font-weight:500;">None</span>
+        </div>
+      `;
+    }
+
     summary.innerHTML = html;
 
     // Total
@@ -1365,7 +1545,10 @@
 
     // ── Send data (localStorage for now — wire to your backend later) ──
     const entry = {
-      teamName, captainName, email, selectedFee,
+      teamName, captainName, email,
+      baseFee: BASE_FEE,
+      junks: chosenJunks.map(j => j.name),
+      totalFee: selectedFee,
       players: selections,
       paymentRef: document.getElementById('paymentConfirm').value.trim(),
       timestamp: new Date().toISOString()
@@ -1387,10 +1570,12 @@
     document.getElementById('captainName').value = '';
     document.getElementById('captainEmail').value = '';
     document.getElementById('paymentConfirm').value = '';
-    document.querySelectorAll('.fee-card').forEach(c => c.classList.remove('selected'));
-    selectedFee = null;
+    selectedFee = BASE_FEE;
+    selectedJunks = new Set();
     selections = {};
     renderPlayerGroups();
+    renderJunkBets();
+    updateRunningTotal();
     goToStep(1);
   }
 
@@ -1398,6 +1583,7 @@
   // INIT
   // ───────────────────────────────────────────
   renderPlayerGroups();
+  renderJunkBets();
 
   // Clear input errors on type
   document.querySelectorAll('.form-input').forEach(input => {
