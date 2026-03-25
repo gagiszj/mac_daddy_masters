@@ -723,6 +723,33 @@
     </ul>
   </nav>
 
+  <!-- ── WORKSHOP CLOSED BANNER ── -->
+  <div id="workshop-banner" style="
+    background: var(--red);
+    border-top: 5px solid var(--gold);
+    border-bottom: 5px solid var(--gold);
+    padding: 32px 24px;
+    text-align: center;
+    margin-top: 65px;
+    position: relative;
+    z-index: 10;
+  ">
+    <p style="
+      font-family: Georgia, serif;
+      font-weight: 700;
+      font-size: clamp(20px, 4vw, 44px);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 0;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      line-height: 1.4;
+    ">
+      Mac Daddy Santa's Workshop is closed for repairs.<br>
+      We will be open for business 4/2/2026.
+    </p>
+  </div>
+
   <!-- ── HERO ── -->
   <section id="hero">
     <video id="hero-video" autoplay muted loop playsinline poster="Brand_assets/file_00000000e1f4722fb41b57b775e67831.png">
@@ -828,12 +855,10 @@
   <div id="logobadge">
     <div class="logobadge-item reveal">
       <img src="Brand_assets/file_00000000e1f4722fb41b57b775e67831.png" alt="" />
-      <div class="logobadge-label">Primary Mark — On Dark</div>
     </div>
     <div class="logobadge-divider reveal reveal-delay-1"></div>
     <div class="logobadge-item reveal reveal-delay-1">
       <img src="Brand_assets/file_00000000f594722f86d57dcbbea0c0c2.png" alt="" style="filter:none;" />
-      <div class="logobadge-label">Alternate Mark — On Light</div>
     </div>
   </div>
 
@@ -886,40 +911,19 @@
     </div>
   </section>
 
-  <!-- ── THE COMMISSIONER ── -->
-  <section id="commissioner">
-    <div class="commissioner-inner">
-      <!-- Text left -->
-      <div>
-        <p class="about-tag reveal">The Authority</p>
-        <h2 class="about-title reveal reveal-delay-1">The<br><em>Commissioner</em></h2>
-        <p class="about-body reveal reveal-delay-2">
-          Every great tournament has a host club. Every great pool has a Commissioner. Ours wears the
-          green jacket with an authority that would make Augusta's membership committee take notes.
-        </p>
-        <p class="about-body reveal reveal-delay-2">
-          The Commissioner sets the rules, locks the picks, enforces the deadlines, and signs off on
-          every payout. His word is final. His jacket is earned. His scorecard is flawless.
-        </p>
-        <div class="about-quote reveal reveal-delay-3">
-          "The Commissioner does not accept late entries.<br>
-          The Commissioner does not negotiate."
-        </div>
-        <a href="#cta" class="btn-gold reveal reveal-delay-4" style="display:inline-flex; background:var(--green-dark); color:var(--gold); box-shadow: 0 4px 16px rgba(2,81,36,0.3);">
-          Contact the Commissioner
-        </a>
+  <!-- ── MAC DADDY SANTA POOL VIDEO ── -->
+  <section id="macdaddyvideo" style="background:#011a0d;padding:100px 32px;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(248,199,11,0.04) 0%,transparent 70%);pointer-events:none;"></div>
+    <div class="section-inner">
+      <div class="section-header">
+        <p class="section-eyebrow reveal">The Pool</p>
+        <h2 class="section-title section-title-light reveal reveal-delay-1">Mac Daddy Santa Pool</h2>
+        <div class="section-rule reveal reveal-delay-2"></div>
       </div>
-      <!-- Photo right -->
-      <div class="commissioner-photo-wrap reveal reveal-delay-1">
-        <img
-          class="commissioner-photo"
-          src="RETILE VIDEO.mp4"
-          alt="The Commissioner"
-        />
-        <div class="commissioner-badge-wrap">
-          <div class="commissioner-badge-title">The Commissioner</div>
-          <div class="commissioner-badge-sub">Augusta Season 2026</div>
-        </div>
+      <div class="video-wrap reveal reveal-delay-1">
+        <video controls preload="metadata" style="width:100%;display:block;">
+          <source src="Brand_assets/Mac Daddy Santa Pool_20260306_095003_0000.mp4" type="video/mp4" />
+        </video>
       </div>
     </div>
   </section>
@@ -936,6 +940,65 @@
         <video controls preload="metadata" style="width:100%;display:block;">
           src="Brand_assets/Mac Daddy Santa Pool_20260306_095003_0000"
         </video>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── EPSTEIN'S ISLAND OF JUNK ── -->
+  <section id="epstein" style="background:var(--green-dark);padding:100px 32px;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(248,199,11,0.05) 0%,transparent 65%);pointer-events:none;"></div>
+    <div class="section-inner">
+      <div class="section-header reveal">
+        <p class="section-eyebrow">The Destination</p>
+        <h2 class="section-title section-title-light" style="font-size:clamp(32px,5vw,60px);">Epstein's Island of Junk</h2>
+        <div class="section-rule"></div>
+      </div>
+
+      <!-- Three images: flanking + center menu -->
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center;max-width:1000px;margin:0 auto 48px;" class="reveal reveal-delay-1">
+        <!-- Left: Epstein Temple -->
+        <div style="text-align:center;">
+          <img src="Brand_assets/EPSTEIN TEMPLE.jpeg" alt="Epstein Temple"
+            style="width:100%;max-width:280px;border:3px solid rgba(248,199,11,0.35);box-shadow:0 8px 32px rgba(0,0,0,0.55);display:block;margin:0 auto;" />
+        </div>
+        <!-- Center: Junk Menu -->
+        <div style="text-align:center;flex-shrink:0;">
+          <img src="Brand_assets/JUNK MENU.png" alt="Junk Menu"
+            style="width:100%;max-width:320px;border:4px solid var(--gold);box-shadow:0 12px 40px rgba(248,199,11,0.3),0 8px 32px rgba(0,0,0,0.6);display:block;margin:0 auto;" />
+        </div>
+        <!-- Right: Little St. James -->
+        <div style="text-align:center;">
+          <img src="Brand_assets/little st james.png" alt="Little St. James"
+            style="width:100%;max-width:280px;border:3px solid rgba(248,199,11,0.35);box-shadow:0 8px 32px rgba(0,0,0,0.55);display:block;margin:0 auto;" />
+        </div>
+      </div>
+
+      <!-- Bottom image: Trump and Epstein, centered -->
+      <div style="text-align:center;margin-bottom:56px;" class="reveal reveal-delay-2">
+        <img src="Brand_assets/Trump and Epstein.png" alt="Trump and Epstein"
+          style="max-width:480px;width:100%;border:3px solid rgba(248,199,11,0.3);box-shadow:0 8px 32px rgba(0,0,0,0.55);display:inline-block;" />
+      </div>
+
+      <!-- Island Paradise Video -->
+      <div class="video-wrap reveal reveal-delay-3">
+        <video controls preload="metadata" style="width:100%;display:block;">
+          <source src="Brand_assets/Island Paradise_20260306_134031_0000.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── THE GROUPINGS ── -->
+  <section id="groupings" style="background:#011a0d;padding:100px 32px;position:relative;overflow:hidden;">
+    <div class="section-inner">
+      <div class="section-header reveal">
+        <p class="section-eyebrow">Augusta 2026</p>
+        <h2 class="section-title section-title-light">The Groupings</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div style="text-align:center;" class="reveal reveal-delay-1">
+        <img src="Brand_assets/2026 Groupings.png" alt="2026 Groupings"
+          style="max-width:900px;width:100%;border:2px solid rgba(248,199,11,0.25);box-shadow:0 8px 40px rgba(0,0,0,0.55);display:inline-block;" />
       </div>
     </div>
   </section>
@@ -1043,7 +1106,6 @@
               alt="Mac Daddy Santa Masters"
               style="width:160px;filter:drop-shadow(0 8px 24px rgba(0,0,0,0.5));"
             />
-            <p style="font-family:Georgia,serif;font-style:italic;font-size:13px;color:rgba(248,199,11,0.6);margin-top:16px;">Primary Mark</p>
           </div>
         </div>
         <!-- Alternate logo on parchment -->
@@ -1054,7 +1116,6 @@
               alt="Mac Daddy Santa Masters Alternate"
               style="width:160px;filter:drop-shadow(0 8px 24px rgba(2,81,36,0.15));"
             />
-            <p style="font-family:Georgia,serif;font-style:italic;font-size:13px;color:rgba(2,81,36,0.45);margin-top:16px;">Alternate Mark</p>
           </div>
         </div>
       </div>
