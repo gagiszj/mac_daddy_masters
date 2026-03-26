@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scorecards | Mac Daddy Santa Masters</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --augusta-dark: #025124;
+  --jacket-green: #015124;
+  --forest-green: #005D1D;
+  --banner-green: #00471F;
+  --masters-gold: #F8C70B;
+  --augusta-yellow: #EFEE00;
+  --flag-red: #CA0032;
+  --white: #FFFFFF;
+  --parchment: #F9F6EE;
+  --black: #000000;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Calibri', 'Segoe UI', sans-serif; background: var(--parchment); color: var(--forest-green); min-height: 100vh; }
+
+.site-header { background: var(--augusta-dark); border-bottom: 4px solid var(--masters-gold); position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; }
+.brand-title { font-family: 'Playfair Display', Georgia, serif; color: var(--masters-gold); font-size: 1.4rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; }
+.brand-title span { font-style: italic; font-weight: 400; text-transform: none; color: var(--white); font-size: 1rem; margin-left: 6px; }
+nav { display: flex; }
+nav a { color: var(--white); text-decoration: none; font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 18px; transition: color 0.2s; position: relative; }
+nav a:hover, nav a.active { color: var(--masters-gold); }
+nav a.active::after { content: ''; position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); width: 60%; height: 4px; background: var(--masters-gold); }
+
+.page-hero {
+  background: linear-gradient(135deg, var(--augusta-dark) 0%, var(--jacket-green) 40%, var(--banner-green) 100%);
+  padding: 48px 24px 40px; text-align: center; position: relative; overflow: hidden;
+}
+.page-hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(248,199,11,0.03) 40px, rgba(248,199,11,0.03) 80px);
+}
+.page-hero h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 900; color: var(--masters-gold); letter-spacing: 4px; text-transform: uppercase; position: relative; z-index: 1; }
+.page-hero .subtitle { font-family: 'Playfair Display', Georgia, serif; font-style: italic; color: var(--white); font-size: 1.1rem; margin-top: 8px; opacity: 0.85; position: relative; z-index: 1; }
+
+/* === FILTER BAR === */
+.filter-bar {
+  max-width: 1200px;
+  margin: 24px auto 0;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-bar label {
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--forest-green);
+  font-weight: 700;
+}
+
+.filter-bar select {
+  padding: 8px 16px;
+  border: 2px solid var(--augusta-dark);
+  background: var(--white);
+  font-family: 'Calibri', sans-serif;
+  font-size: 0.9rem;
+  color: var(--forest-green);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.filter-bar select:focus {
+  outline: none;
+  border-color: var(--masters-gold);
+}
+
+/* === SCORECARDS GRID === */
+.scorecards-container {
+  max-width: 1200px;
+  margin: 24px auto 60px;
+  padding: 0 24px;
+}
+
+.scorecards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+  gap: 24px;
+}
+
+.scorecard {
+  background: var(--white);
+  border: 2px solid rgba(2,81,36,0.12);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  transition: all 0.25s;
+}
+
+.scorecard:hover {
+  border-color: var(--masters-gold);
+  box-shadow: 0 6px 24px rgba(248,199,11,0.12);
+}
+
+.scorecard-header {
+  background: var(--augusta-dark);
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scorecard-header h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--masters-gold);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.scorecard-header .sc-owner {
+  color: var(--white);
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.scorecard-header .sc-total {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  padding: 4px 14px;
+  border-radius: 2px;
+  min-width: 50px;
+  text-align: center;
+}
+
+.sc-total.under { background: var(--forest-green); color: var(--white); }
+.sc-total.over { background: var(--flag-red); color: var(--white); }
+.sc-total.even { background: var(--white); color: var(--black); }
+
+.scorecard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.scorecard-table thead th {
+  background: var(--banner-green);
+  color: var(--masters-gold);
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  text-align: center;
+  border-bottom: 2px solid var(--masters-gold);
+}
+
+.scorecard-table thead th:first-child {
+  text-align: left;
+  width: 40%;
+}
+
+.scorecard-table tbody td {
+  padding: 10px 12px;
+  text-align: center;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(0,93,29,0.08);
+}
+
+.scorecard-table tbody td:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: var(--forest-green);
+}
+
+.scorecard-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.scorecard-table .group-label {
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #999;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.round-under { color: var(--forest-green); font-weight: 700; }
+.round-over { color: var(--flag-red); font-weight: 700; }
+.round-even { color: var(--black); }
+.round-mc { color: #999; font-style: italic; font-size: 0.8rem; }
+
+.total-cell {
+  font-weight: 900;
+  font-size: 1rem;
+}
+
+.scorecard-junk {
+  background: rgba(248,199,11,0.06);
+  border-top: 1px solid rgba(248,199,11,0.2);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.scorecard-junk .jl {
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #999;
+  margin-right: 8px;
+}
+
+.junk-badge {
+  display: inline-block;
+  width: 24px; height: 24px;
+  line-height: 24px;
+  text-align: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+  border-radius: 2px;
+  color: var(--white);
+}
+
+.junk-badge.gj { background: var(--masters-gold); color: var(--augusta-dark); }
+.junk-badge.ca { background: var(--flag-red); }
+.junk-badge.sg { background: var(--forest-green); }
+.junk-badge.ace { background: var(--banner-green); }
+.junk-badge.sb { background: #8B6914; }
+.junk-badge.empty { background: transparent; border: 1px dashed #ccc; color: #ccc; }
+
+.junk-score {
+  margin-left: auto;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.site-footer { background: var(--augusta-dark); border-top: 4px solid var(--masters-gold); padding: 32px 24px; text-align: center; }
+.footer-tagline { font-family: 'Playfair Display', Georgia, serif; font-style: italic; color: var(--masters-gold); font-size: 1.1rem; margin-bottom: 8px; }
+.footer-copy { color: rgba(255,255,255,0.5); font-size: 0.75rem; letter-spacing: 1px; }
+
+@media (max-width: 768px) {
+  .header-inner { flex-direction: column; gap: 12px; }
+  .page-hero h1 { font-size: 2rem; }
+  nav a { padding: 6px 10px; font-size: 0.75rem; }
+  .scorecards-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand-title">MAC DADDY SANTA <span>Masters</span></a>
+    <nav>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="teams.html">Teams</a>
+      <a href="scorecards.html" class="active">Scorecards</a>
+      <a href="index.html">Home</a>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero">
+  <h1>Scorecards</h1>
+  <p class="subtitle">5th Annual Mac Daddy Santa Masters</p>
+</section>
+
+<!-- FILTER -->
+<div class="filter-bar">
+  <label>Filter by Owner:</label>
+  <select id="owner-filter" onchange="filterCards()">
+    <option value="all">All Contestants</option>
+  </select>
+  <label style="margin-left:16px;">Sort:</label>
+  <select id="sort-filter" onchange="filterCards()">
+    <option value="score">Best Score</option>
+    <option value="name">Team Name</option>
+    <option value="owner">Owner</option>
+  </select>
+</div>
+
+<!-- SCORECARDS -->
+<div class="scorecards-container">
+  <div class="scorecards-grid" id="scorecards-grid"></div>
+</div>
+
+<footer class="site-footer">
+  <p class="footer-tagline">A tradition unlike any other.</p>
+  <p class="footer-copy">MAC DADDY SANTA MASTERS &copy; 2025 &nbsp;|&nbsp; #MacDaddySantaMasters</p>
+</footer>
+
+<script>
+// =====================================================
+// SCORECARD DATA — Replace with real tournament scores
+// Rounds are relative to par (negative = under par)
+// Use "MC" for missed cut
+// =====================================================
+const scorecards = [
+  {
+    name: "T-6 Mafia", owner: "AJ Gagis",
+    players: [
+      { name: "Scottie Scheffler", group: 1, r1: -3, r2: -2, r3: -1, r4: -3 },
+      { name: "Hideki Matsuyama", group: 2, r1: -3, r2: -1, r3: -7, r4: 1 },
+      { name: "Adam Scott", group: 3, r1: 2, r2: 1, r3: 7, r4: 1 },
+      { name: "Corey Conners", group: 4, r1: 1, r2: -3, r3: -4, r4: 2 }
+    ],
+    junks: { gj: true, ca: true, sg: true, ace: true, sb: true },
+    junkScore: -15
+  },
+  {
+    name: "Irish Tiger", owner: "Matt Hanna",
+    players: [
+      { name: "Rory McIlroy", group: 1, r1: -1, r2: 0, r3: -2, r4: -4 },
+      { name: "Tony Finau", group: 2, r1: 2, r2: -1, r3: 0, r4: 3 },
+      { name: "Tommy Fleetwood", group: 3, r1: 0, r2: -2, r3: 1, r4: -1 },
+      { name: "Corey Conners", group: 4, r1: 1, r2: -3, r3: -4, r4: 2 }
+    ],
+    junks: { gj: true, ca: true, sg: true, ace: true, sb: false },
+    junkScore: -10
+  },
+  {
+    name: "The Giggys!", owner: "Kid Nantz",
+    players: [
+      { name: "Xander Schauffele", group: 1, r1: -2, r2: -3, r3: 0, r4: -1 },
+      { name: "Cameron Smith", group: 2, r1: 2, r2: -4, r3: 1, r4: -2 },
+      { name: "Max Homa", group: 3, r1: 1, r2: 0, r3: 2, r4: -1 },
+      { name: "Christiaan Bezuidenhout", group: 4, r1: -2, r2: 4, r3: 2, r4: 0 }
+    ],
+    junks: { gj: true, ca: true, sg: true, ace: true, sb: false },
+    junkScore: -10
+  },
+  {
+    name: "SNED NUDS", owner: "Bryan Conover",
+    players: [
+      { name: "Jon Rahm", group: 1, r1: 0, r2: 0, r3: 0, r4: -6 },
+      { name: "Tony Finau", group: 2, r1: 2, r2: -1, r3: 0, r4: 3 },
+      { name: "Bubba Watson", group: 3, r1: 2, r2: -2, r3: 1, r4: 0 },
+      { name: "Phil Mickelson", group: 4, r1: 3, r2: -2, r3: 2, r4: 0 }
+    ],
+    junks: { gj: true, ca: true, sg: true, ace: false, sb: false },
+    junkScore: -5
+  },
+  {
+    name: "Bagel Train", owner: "George Gebelen",
+    players: [
+      { name: "Dustin Johnson", group: 1, r1: 2, r2: 3, r3: "MC", r4: "MC" },
+      { name: "Webb Simpson", group: 2, r1: 4, r2: 0, r3: "MC", r4: "MC" },
+      { name: "Louis Oosthuizen", group: 3, r1: 4, r2: -2, r3: 0, r4: -1 },
+      { name: "Kevin Kisner", group: 4, r1: 0, r2: 5, r3: "MC", r4: "MC" }
+    ],
+    junks: { gj: false, ca: false, sg: false, ace: false, sb: false },
+    junkScore: 0
+  },
+  {
+    name: "Code Brown 1", owner: "Doug Brown",
+    players: [
+      { name: "Patrick Cantlay", group: 1, r1: 1, r2: -1, r3: 2, r4: 0 },
+      { name: "Paul Casey", group: 2, r1: 3, r2: 0, r3: -1, r4: 1 },
+      { name: "Abraham Ancer", group: 3, r1: 3, r2: -3, r3: 3, r4: -2 },
+      { name: "Gary Woodland", group: 4, r1: 1, r2: 0, r3: 3, r4: 0 }
+    ],
+    junks: { gj: false, ca: false, sg: false, ace: false, sb: false },
+    junkScore: 0
+  },
+];
+
+function formatRound(val) {
+  if (val === "MC") return '<span class="round-mc">MC</span>';
+  if (val < 0) return `<span class="round-under">${val}</span>`;
+  if (val > 0) return `<span class="round-over">+${val}</span>`;
+  return `<span class="round-even">E</span>`;
+}
+
+function playerTotal(p) {
+  const rounds = [p.r1, p.r2, p.r3, p.r4];
+  let sum = 0;
+  for (const r of rounds) {
+    if (r === "MC") sum += 5; // MC penalty
+    else sum += r;
+  }
+  return sum;
+}
+
+function teamTotal(sc) {
+  return sc.players.reduce((s, p) => s + playerTotal(p), 0);
+}
+
+function formatScore(s) {
+  if (s < 0) return s;
+  if (s === 0) return "E";
+  return "+" + s;
+}
+
+function renderScorecard(sc) {
+  const total = teamTotal(sc);
+  const totalClass = total < 0 ? 'under' : total > 0 ? 'over' : 'even';
+
+  const junkBadges = ['gj','ca','sg','ace','sb'].map(k => {
+    const labels = { gj: 'GJ', ca: 'CA', sg: 'SG', ace: 'ACE', sb: 'SB' };
+    return sc.junks[k]
+      ? `<span class="junk-badge ${k}">${labels[k]}</span>`
+      : `<span class="junk-badge empty">${labels[k]}</span>`;
+  }).join('');
+
+  const rows = sc.players.map(p => {
+    const pt = playerTotal(p);
+    const ptClass = pt < 0 ? 'round-under' : pt > 0 ? 'round-over' : 'round-even';
+    return `
+      <tr>
+        <td>
+          <span class="group-label">Group ${p.group}</span>
+          ${p.name}
+        </td>
+        <td>${formatRound(p.r1)}</td>
+        <td>${formatRound(p.r2)}</td>
+        <td>${formatRound(p.r3)}</td>
+        <td>${formatRound(p.r4)}</td>
+        <td class="total-cell ${ptClass}">${formatScore(pt)}</td>
+      </tr>
+    `;
+  }).join('');
+
+  const card = document.createElement('div');
+  card.className = 'scorecard';
+  card.dataset.owner = sc.owner;
+  card.dataset.name = sc.name;
+  card.dataset.score = total;
+  card.innerHTML = `
+    <div class="scorecard-header">
+      <div>
+        <h3>${sc.name}</h3>
+        <span class="sc-owner">${sc.owner}</span>
+      </div>
+      <div class="sc-total ${totalClass}">${formatScore(total)}</div>
+    </div>
+    <table class="scorecard-table">
+      <thead>
+        <tr><th>Player</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Total</th></tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="scorecard-junk">
+      <span class="jl">Junk</span>
+      ${junkBadges}
+      <span class="junk-score ${sc.junkScore < 0 ? 'round-under' : 'round-even'}">${sc.junkScore < 0 ? sc.junkScore : sc.junkScore === 0 ? '—' : '+' + sc.junkScore}</span>
+    </div>
+  `;
+  return card;
+}
+
+// Build owner filter
+const owners = [...new Set(scorecards.map(s => s.owner))].sort();
+const ownerSelect = document.getElementById('owner-filter');
+owners.forEach(o => {
+  const opt = document.createElement('option');
+  opt.value = o; opt.textContent = o;
+  ownerSelect.appendChild(opt);
+});
+
+function filterCards() {
+  const ownerVal = document.getElementById('owner-filter').value;
+  const sortVal = document.getElementById('sort-filter').value;
+  
+  let filtered = [...scorecards];
+  if (ownerVal !== 'all') filtered = filtered.filter(s => s.owner === ownerVal);
+  
+  if (sortVal === 'score') filtered.sort((a, b) => teamTotal(a) - teamTotal(b));
+  else if (sortVal === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
+  else if (sortVal === 'owner') filtered.sort((a, b) => a.owner.localeCompare(b.owner));
+  
+  const grid = document.getElementById('scorecards-grid');
+  grid.innerHTML = '';
+  filtered.forEach(sc => grid.appendChild(renderScorecard(sc)));
+}
+
+// Initial render
+filterCards();
+</script>
+
+</body>
+</html>

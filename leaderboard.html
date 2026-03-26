@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboard | Mac Daddy Santa Masters</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --augusta-dark: #025124;
+  --jacket-green: #015124;
+  --forest-green: #005D1D;
+  --banner-green: #00471F;
+  --masters-gold: #F8C70B;
+  --augusta-yellow: #EFEE00;
+  --flag-red: #CA0032;
+  --white: #FFFFFF;
+  --parchment: #F9F6EE;
+  --black: #000000;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Calibri', 'Segoe UI', sans-serif;
+  background: var(--parchment);
+  color: var(--forest-green);
+  min-height: 100vh;
+}
+
+/* === HEADER / NAV === */
+.site-header {
+  background: var(--augusta-dark);
+  border-bottom: 4px solid var(--masters-gold);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+}
+
+.brand-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--masters-gold);
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.brand-title span {
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  color: var(--white);
+  font-size: 1rem;
+  margin-left: 6px;
+}
+
+nav { display: flex; gap: 0; }
+
+nav a {
+  color: var(--white);
+  text-decoration: none;
+  font-family: 'Calibri', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 2px;
+  transition: all 0.2s;
+  position: relative;
+}
+
+nav a:hover, nav a.active {
+  color: var(--masters-gold);
+}
+
+nav a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 4px;
+  background: var(--masters-gold);
+}
+
+/* === HERO BANNER === */
+.page-hero {
+  background: linear-gradient(135deg, var(--augusta-dark) 0%, var(--jacket-green) 40%, var(--banner-green) 100%);
+  padding: 48px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 40px,
+    rgba(248,199,11,0.03) 40px,
+    rgba(248,199,11,0.03) 80px
+  );
+}
+
+.page-hero h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--masters-gold);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+
+.page-hero .subtitle {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  color: var(--white);
+  font-size: 1.1rem;
+  margin-top: 8px;
+  opacity: 0.85;
+  position: relative;
+  z-index: 1;
+}
+
+.status-badge {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 6px 20px;
+  background: var(--flag-red);
+  color: var(--white);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  position: relative;
+  z-index: 1;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* === LEADERBOARD TABLE === */
+.leaderboard-container {
+  max-width: 1100px;
+  margin: -20px auto 60px;
+  padding: 0 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.leaderboard-card {
+  background: var(--white);
+  border: 2px solid var(--masters-gold);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(2,81,36,0.15);
+}
+
+.card-header {
+  background: var(--augusta-dark);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--masters-gold);
+  font-size: 1rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.card-header .round-info {
+  color: var(--white);
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  background: var(--banner-green);
+  color: var(--masters-gold);
+  font-family: 'Calibri', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 2px solid var(--masters-gold);
+}
+
+thead th:nth-child(1) { width: 60px; text-align: center; }
+thead th:nth-child(4),
+thead th:nth-child(5),
+thead th:nth-child(6) { text-align: center; }
+
+tbody tr {
+  border-bottom: 1px solid rgba(0,93,29,0.1);
+  transition: background 0.15s;
+}
+
+tbody tr:hover { background: rgba(248,199,11,0.06); }
+
+tbody tr.leader { background: rgba(248,199,11,0.12); }
+tbody tr.leader td:first-child {
+  font-weight: 700;
+  color: var(--masters-gold);
+}
+
+tbody tr.cut-line {
+  border-bottom: 3px dashed var(--flag-red);
+}
+
+tbody td {
+  padding: 14px 16px;
+  font-size: 0.95rem;
+  color: var(--forest-green);
+}
+
+tbody td:nth-child(1) {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+tbody td:nth-child(4),
+tbody td:nth-child(5),
+tbody td:nth-child(6) { text-align: center; }
+
+.score-under { color: var(--forest-green); font-weight: 700; }
+.score-over { color: var(--flag-red); font-weight: 700; }
+.score-even { color: var(--black); }
+
+.team-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.owner-name {
+  color: #666;
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+
+.junk-badges {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.junk-badge {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
+  text-align: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+  border-radius: 2px;
+  color: var(--white);
+  background: var(--augusta-dark);
+}
+
+.junk-badge.gj { background: var(--masters-gold); color: var(--augusta-dark); }
+.junk-badge.ca { background: var(--flag-red); }
+.junk-badge.sg { background: var(--forest-green); }
+.junk-badge.ace { background: var(--banner-green); }
+.junk-badge.sb { background: #8B6914; }
+
+/* === LEGEND === */
+.legend {
+  max-width: 1100px;
+  margin: 0 auto 40px;
+  padding: 0 24px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--forest-green);
+}
+
+.legend-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+}
+
+/* === FOOTER === */
+.site-footer {
+  background: var(--augusta-dark);
+  border-top: 4px solid var(--masters-gold);
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.footer-tagline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  color: var(--masters-gold);
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.footer-copy {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .header-inner { flex-direction: column; gap: 12px; }
+  .page-hero h1 { font-size: 2rem; }
+  nav a { padding: 6px 10px; font-size: 0.75rem; }
+  table { font-size: 0.85rem; }
+  thead th, tbody td { padding: 10px 8px; }
+  .team-name { font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+  .page-hero h1 { font-size: 1.5rem; letter-spacing: 2px; }
+  thead th:nth-child(5), tbody td:nth-child(5),
+  thead th:nth-child(6), tbody td:nth-child(6) { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand-title">MAC DADDY SANTA <span>Masters</span></a>
+    <nav>
+      <a href="leaderboard.html" class="active">Leaderboard</a>
+      <a href="teams.html">Teams</a>
+      <a href="scorecards.html">Scorecards</a>
+      <a href="index.html">Home</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="page-hero">
+  <h1>Leaderboard</h1>
+  <p class="subtitle">5th Annual Mac Daddy Santa Masters</p>
+  <span class="status-badge">⛳ Pre-Tournament</span>
+</section>
+
+<!-- LEADERBOARD -->
+<div class="leaderboard-container">
+  <div class="leaderboard-card">
+    <div class="card-header">
+      <h2>Official Standings</h2>
+      <span class="round-info">Updated: Pre-Tournament</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Pos</th>
+          <th>Team</th>
+          <th>Selections</th>
+          <th>Total</th>
+          <th>Junk</th>
+          <th>Final</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <!-- Populated by JS or manually -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: var(--masters-gold);"></div>
+    GJ = Green Jacket
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: var(--flag-red);"></div>
+    CA = Choke Artist
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: var(--forest-green);"></div>
+    SG = Scratch Golfer
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: var(--banner-green);"></div>
+    ACE = Ace
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: #8B6914;"></div>
+    SB = Sand Bagger
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p class="footer-tagline">A tradition unlike any other.</p>
+  <p class="footer-copy">MAC DADDY SANTA MASTERS &copy; 2025 &nbsp;|&nbsp; #MacDaddySantaMasters</p>
+</footer>
+
+<script>
+// =====================================================
+// SAMPLE DATA — Replace with real data during tournament
+// For test run, this shows fake teams with placeholder scores
+// =====================================================
+const teams = [
+  { name: "T-6 Mafia", owner: "AJ Gagis", g1: "Scottie Scheffler", g2: "Hideki Matsuyama", g3: "Adam Scott", g4: "Corey Conners", total: -18, junk: -15, final: -33, junks: ["GJ","CA","SG","ACE","SB"] },
+  { name: "Irish Tiger", owner: "Matt Hanna", g1: "Rory McIlroy", g2: "Tony Finau", g3: "Tommy Fleetwood", g4: "Corey Conners", total: -14, junk: -10, final: -24, junks: ["GJ","CA","SG","ACE"] },
+  { name: "Cuomosapien", owner: "Charlie McCarthy", g1: "Collin Morikawa", g2: "Hideki Matsuyama", g3: "Abraham Ancer", g4: "Phil Mickelson", total: -12, junk: -10, final: -22, junks: ["GJ","CA","SG","ACE"] },
+  { name: "ROCK, FLAG AND EAGLE!", owner: "Cooper Morris", g1: "Xander Schauffele", g2: "Cameron Smith", g3: "Max Homa", g4: "Will Zalatoris", total: -10, junk: -5, final: -15, junks: ["GJ","SG"] },
+  { name: "Wubblesnubbitz", owner: "PJ Lally", g1: "Jon Rahm", g2: "Tony Finau", g3: "Scottie Scheffler", g4: "Will Zalatoris", total: -8, junk: -10, final: -18, junks: ["GJ","CA","SG","ACE"] },
+  { name: "The Giggys!", owner: "Kid Nantz", g1: "Xander Schauffele", g2: "Cameron Smith", g3: "Max Homa", g4: "Christiaan Bezuidenhout", total: -6, junk: -10, final: -16, junks: ["GJ","CA","SG","ACE"] },
+  { name: "83 in a 45", owner: "Teddy Economos", g1: "Bryson DeChambeau", g2: "Viktor Hovland", g3: "Tommy Fleetwood", g4: "Matt Kuchar", total: -4, junk: -5, final: -9, junks: ["GJ","SG"] },
+  { name: "SNED NUDS", owner: "Bryan Conover", g1: "Jon Rahm", g2: "Tony Finau", g3: "Bubba Watson", g4: "Phil Mickelson", total: -2, junk: -5, final: -7, junks: ["GJ","CA","SG"] },
+  { name: "Bagel Train", owner: "George Gebelen", g1: "Dustin Johnson", g2: "Webb Simpson", g3: "Louis Oosthuizen", g4: "Kevin Kisner", total: 0, junk: 0, final: 0, junks: [] },
+  { name: "Sweet Georgia Peach", owner: "Zach Enix", g1: "Brooks Koepka", g2: "Daniel Berger", g3: "Sergio Garcia", g4: "Si-Woo Kim", total: 4, junk: -5, final: -1, junks: ["SG"] },
+  { name: "Code Brown 1", owner: "Doug Brown", g1: "Patrick Cantlay", g2: "Paul Casey", g3: "Abraham Ancer", g4: "Gary Woodland", total: 6, junk: 0, final: 6, junks: [] },
+  { name: "Only 40 over", owner: "Fowler Evans", g1: "Justin Thomas", g2: "Jason Day", g3: "Justin Rose", g4: "Fred Couples", total: 12, junk: 0, final: 12, junks: [] },
+];
+
+function formatScore(score) {
+  if (score < 0) return score;
+  if (score === 0) return "E";
+  return "+" + score;
+}
+
+function scoreClass(score) {
+  if (score < 0) return "score-under";
+  if (score > 0) return "score-over";
+  return "score-even";
+}
+
+function renderJunks(junks) {
+  const map = { GJ: "gj", CA: "ca", SG: "sg", ACE: "ace", SB: "sb" };
+  return junks.map(j => `<span class="junk-badge ${map[j]}">${j}</span>`).join('');
+}
+
+// Sort by final score ascending
+teams.sort((a, b) => a.final - b.final);
+
+const tbody = document.getElementById('leaderboard-body');
+teams.forEach((t, i) => {
+  const pos = i + 1;
+  const row = document.createElement('tr');
+  if (i === 0) row.classList.add('leader');
+  
+  row.innerHTML = `
+    <td>${pos}</td>
+    <td>
+      <div class="team-name">${t.name}</div>
+      <div class="owner-name">${t.owner}</div>
+    </td>
+    <td style="font-size:0.8rem; color:#666;">
+      ${t.g1}<br>${t.g2}<br>${t.g3}<br>${t.g4}
+    </td>
+    <td class="${scoreClass(t.total)}">${formatScore(t.total)}</td>
+    <td><div class="junk-badges">${renderJunks(t.junks)}</div></td>
+    <td class="${scoreClass(t.final)}" style="font-weight:900; font-size:1.1rem;">${formatScore(t.final)}</td>
+  `;
+  tbody.appendChild(row);
+});
+</script>
+
+</body>
+</html>
