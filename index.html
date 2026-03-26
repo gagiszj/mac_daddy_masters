@@ -716,12 +716,12 @@
     <ul>
       <li><a href="#meet">About</a></li>
       <li><a href="#how">How It Works</a></li>
-      <li><a href="#leaderboard">Leaderboard</a></li>
       <li><a href="#gallery">The Field</a></li>
-      <li><a href="#history">Past Mac Daddys</a></li>
-      <li><a href="leaderboard.html">Leaderboard</a></li>
-      <li><a href="teams.html">Teams</a></li>
-      <li><a href="scorecards.html">Scorecards</a></li>
+      <li><a href="#history">Archives</a></li>
+      <li style="width:1px;height:24px;background:rgba(248,199,11,0.3);margin:0 4px;"></li>
+      <li><a href="leaderboard.html" style="color:var(--gold);">⛳ Leaderboard</a></li>
+      <li><a href="teams.html" style="color:var(--gold);">Teams</a></li>
+      <li><a href="scorecards.html" style="color:var(--gold);">Scorecards</a></li>
       <li><a href="signup.html" class="btn-gold" style="padding:10px 22px;font-size:12px;">Enter Pool</a></li>
     </ul>
   </nav>
@@ -1120,8 +1120,55 @@
         </div>
       </div>
       <div class="lb-cta reveal reveal-delay-2">
-        <a href="#cta" class="btn-gold" style="background:var(--green-dark);color:var(--gold);box-shadow:0 4px 16px rgba(2,81,36,0.2);">
-          View Full Leaderboard
+        <a href="leaderboard.html" class="btn-gold" style="background:var(--green-dark);color:var(--gold);box-shadow:0 4px 16px rgba(2,81,36,0.2);">
+          View Full Leaderboard →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── POOL HUB — QUICK ACCESS ── -->
+  <section id="poolhub" style="background:var(--green-dark);padding:80px 32px;position:relative;overflow:hidden;border-top:4px solid var(--gold);border-bottom:4px solid var(--gold);">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(248,199,11,0.06) 0%,transparent 65%);pointer-events:none;"></div>
+    <div class="section-inner" style="position:relative;z-index:1;">
+      <div class="section-header" style="margin-bottom:48px;">
+        <p class="section-eyebrow reveal">Tournament Central</p>
+        <h2 class="section-title section-title-light reveal reveal-delay-1">The Pool</h2>
+        <div class="section-rule reveal reveal-delay-2"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:960px;margin:0 auto;">
+        <!-- Leaderboard Card -->
+        <a href="leaderboard.html" style="text-decoration:none;" class="reveal">
+          <div style="background:rgba(255,255,255,0.04);border:2px solid rgba(248,199,11,0.2);padding:48px 32px;text-align:center;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);cursor:pointer;" 
+            onmouseenter="this.style.borderColor='var(--gold)';this.style.transform='translateY(-6px)';this.style.boxShadow='0 16px 48px rgba(248,199,11,0.15)'"
+            onmouseleave="this.style.borderColor='rgba(248,199,11,0.2)';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+            <div style="font-size:48px;margin-bottom:16px;">📊</div>
+            <div style="font-family:Georgia,serif;font-weight:700;font-size:20px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Leaderboard</div>
+            <div style="font-size:14px;line-height:1.6;color:rgba(255,255,255,0.55);">Live standings, scores, and junk results. Who's wearing the jacket?</div>
+            <div style="margin-top:20px;font-family:Georgia,serif;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);opacity:0.7;">View Standings →</div>
+          </div>
+        </a>
+        <!-- Teams Card -->
+        <a href="teams.html" style="text-decoration:none;" class="reveal reveal-delay-1">
+          <div style="background:rgba(255,255,255,0.04);border:2px solid rgba(248,199,11,0.2);padding:48px 32px;text-align:center;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);cursor:pointer;"
+            onmouseenter="this.style.borderColor='var(--gold)';this.style.transform='translateY(-6px)';this.style.boxShadow='0 16px 48px rgba(248,199,11,0.15)'"
+            onmouseleave="this.style.borderColor='rgba(248,199,11,0.2)';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+            <div style="font-size:48px;margin-bottom:16px;">🔒</div>
+            <div style="font-family:Georgia,serif;font-weight:700;font-size:20px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">The Selections</div>
+            <div style="font-size:14px;line-height:1.6;color:rgba(255,255,255,0.55);">All contestant picks revealed Wednesday at midnight. Countdown is live.</div>
+            <div style="margin-top:20px;font-family:Georgia,serif;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);opacity:0.7;">View Teams →</div>
+          </div>
+        </a>
+        <!-- Scorecards Card -->
+        <a href="scorecards.html" style="text-decoration:none;" class="reveal reveal-delay-2">
+          <div style="background:rgba(255,255,255,0.04);border:2px solid rgba(248,199,11,0.2);padding:48px 32px;text-align:center;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);cursor:pointer;"
+            onmouseenter="this.style.borderColor='var(--gold)';this.style.transform='translateY(-6px)';this.style.boxShadow='0 16px 48px rgba(248,199,11,0.15)'"
+            onmouseleave="this.style.borderColor='rgba(248,199,11,0.2)';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+            <div style="font-size:48px;margin-bottom:16px;">🏌️</div>
+            <div style="font-family:Georgia,serif;font-weight:700;font-size:20px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Scorecards</div>
+            <div style="font-size:14px;line-height:1.6;color:rgba(255,255,255,0.55);">Round-by-round breakdowns for every team. Filter by owner, sort by score.</div>
+            <div style="margin-top:20px;font-family:Georgia,serif;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);opacity:0.7;">View Scorecards →</div>
+          </div>
         </a>
       </div>
     </div>
@@ -1273,9 +1320,11 @@
         <nav class="footer-links" aria-label="Footer navigation">
           <a href="#meet">About</a>
           <a href="#how">How It Works</a>
-          <a href="#leaderboard">Leaderboard</a>
+          <a href="leaderboard.html">Leaderboard</a>
+          <a href="teams.html">Teams</a>
+          <a href="scorecards.html">Scorecards</a>
           <a href="#gallery">The Field</a>
-          <a href="#history">Past Mac Daddys</a>
+          <a href="#history">Archives</a>
           <a href="signup.html">Enter Pool</a>
         </nav>
       </div>
