@@ -1237,6 +1237,9 @@
   let selectedFee   = BASE_FEE;
   let selections    = {};  // groupIndex -> playerName
   let selectedJunks = new Set();
+  let isSandBagger  = false;  // true if skipping Tier 1
+  let bonusPickTier = null;   // which tier (1,2,3) gets the bonus pick (index)
+  let bonusSelection = null;  // the bonus player name
 
   // ───────────────────────────────────────────
   // RENDER PLAYER GROUPS
@@ -1249,6 +1252,17 @@
       const section = document.createElement('div');
       section.className = 'group-section';
 
+      // Determine pick count label
+      let pickCount = 1;
+      let pickLabel = 'PICK 1';
+      if (isSandBagger && gi === 0) {
+        pickLabel = 'SKIPPED';
+      }
+      if (isSandBagger && bonusPickTier === gi && gi > 0) {
+        pickCount = 2;
+        pickLabel = 'PICK 2';
+      }
+
       const writeInCard = gi === 3 ? `
         <div class="player-card write-in" data-group="${gi}" data-player="__writein__" onclick="selectWriteIn(${gi}, this)">
           <div class="write-in-label"><span>✏️</span> Write-In Pick</div>
@@ -1256,12 +1270,40 @@
         </div>
       ` : '';
 
+      // Skip Tier 1 card (only for group 0)
+      const skipCard = gi === 0 ? `
+        <div class="player-card write-in ${isSandBagger ? 'selected' : ''}" data-group="0" data-player="__skip__" onclick="toggleSandBagger(this)" style="border-color:${isSandBagger ? 'var(--masters-gold)' : '#e0dcd3'};background:${isSandBagger ? 'rgba(212,175,55,0.12)' : 'rgba(212,175,55,0.04)'};">
+          <div class="write-in-label" style="color:${isSandBagger ? 'var(--masters-deeper)' : 'var(--ink-light)'};">
+            <span>🏌️</span> <strong>Sand Bagger</strong> — Skip Tier 1
+          </div>
+          <div style="font-size:0.8rem;color:var(--ink-light);margin-top:4px;line-height:1.4;">
+            No elite golfer. Pick an extra player from any other tier instead. Costs $5 for a -5 stroke bonus.
+          </div>
+        </div>
+      ` : '';
+
+      // Bonus pick selector (shown in tiers 2-4 when Sand Bagger is active)
+      let bonusPickCard = '';
+      if (isSandBagger && gi > 0) {
+        const isBonusTier = bonusPickTier === gi;
+        bonusPickCard = `
+          <div style="grid-column:1/-1;margin-top:8px;margin-bottom:4px;">
+            <button class="player-card" onclick="setBonusTier(${gi})" style="width:100%;text-align:center;border-color:${isBonusTier ? 'var(--masters-gold)' : 'var(--masters-green)'};background:${isBonusTier ? 'rgba(212,175,55,0.1)' : 'rgba(0,103,71,0.04)'};cursor:pointer;border-style:dashed;">
+              <div style="font-weight:700;font-size:0.9rem;color:${isBonusTier ? 'var(--masters-deeper)' : 'var(--masters-green)'};">
+                ${isBonusTier ? '✓ Bonus Pick Active — Select your 2nd player above' : '+ Use Bonus Pick in this tier'}
+              </div>
+            </button>
+          </div>
+        `;
+      }
+
       section.innerHTML = `
         <div class="group-header">
-          <span class="group-badge">PICK 1</span>
+          <span class="group-badge" ${gi === 0 && isSandBagger ? 'style="background:var(--masters-gold);color:var(--masters-deeper);"' : ''}>${pickLabel}</span>
           ${group.name}
+          ${isSandBagger && bonusPickTier === gi && gi > 0 ? '<span class="group-badge" style="background:var(--masters-gold);color:var(--masters-deeper);margin-left:6px;">BONUS</span>' : ''}
         </div>
-        <div class="player-options" id="group-${gi}">
+        <div class="player-options" id="group-${gi}" ${gi === 0 && isSandBagger ? 'style="opacity:0.4;pointer-events:none;"' : ''}>
           ${group.players.map((p, pi) => `
             <div class="player-card" data-group="${gi}" data-player="${p.name}" onclick="selectPlayer(${gi}, '${p.name.replace(/'/g, "\\'")}', this)">
               <div class="player-name">${p.name}</div>
@@ -1270,10 +1312,133 @@
           `).join('')}
           ${writeInCard}
         </div>
+        ${gi === 0 ? skipCard : ''}
+        ${bonusPickCard}
         <p class="group-error" id="groupError-${gi}">Please select a player from this group.</p>
       `;
+
+      // Bonus pick area (separate player grid for the 2nd pick)
+      if (isSandBagger && bonusPickTier === gi && gi > 0) {
+        const bonusDiv = document.createElement('div');
+        bonusDiv.className = 'group-section';
+        bonusDiv.style.marginTop = '0';
+        bonusDiv.style.paddingTop = '12px';
+        bonusDiv.style.borderTop = '2px dashed var(--masters-gold)';
+        bonusDiv.innerHTML = `
+          <div class="group-header" style="border-bottom-color:var(--masters-gold);">
+            <span class="group-badge" style="background:var(--masters-gold);color:var(--masters-deeper);">BONUS PICK</span>
+            ${group.name} — 2nd Selection
+          </div>
+          <div class="player-options" id="group-bonus">
+            ${group.players.map(p => `
+              <div class="player-card" data-group="bonus" data-player="${p.name}" onclick="selectBonusPlayer('${p.name.replace(/'/g, "\\'")}', this)">
+                <div class="player-name">${p.name}</div>
+              </div>
+            `).join('')}
+            ${gi === 3 ? `
+              <div class="player-card write-in" data-group="bonus" data-player="__writein__" onclick="selectBonusWriteIn(this)">
+                <div class="write-in-label"><span>✏️</span> Write-In Pick</div>
+                <input type="text" class="write-in-input" id="writeIn-bonus" placeholder="Enter any player not listed…" maxlength="50" onclick="event.stopPropagation()" oninput="updateBonusWriteIn(this)">
+              </div>
+            ` : ''}
+          </div>
+          <p class="group-error" id="groupError-bonus" style="display:none;">Please select your bonus player.</p>
+        `;
+        section.appendChild(bonusDiv);
+      }
+
       container.appendChild(section);
     });
+
+    // Restore selections after re-render
+    Object.keys(selections).forEach(gi => {
+      if (gi === 'bonus') return;
+      const groupEl = document.getElementById(`group-${gi}`);
+      if (!groupEl) return;
+      const cards = groupEl.querySelectorAll('.player-card');
+      cards.forEach(card => {
+        if (card.dataset.player === selections[gi]) {
+          card.classList.add('selected');
+        }
+      });
+    });
+
+    // Restore bonus selection
+    if (bonusSelection) {
+      const bonusGroup = document.getElementById('group-bonus');
+      if (bonusGroup) {
+        bonusGroup.querySelectorAll('.player-card').forEach(card => {
+          if (card.dataset.player === bonusSelection) card.classList.add('selected');
+        });
+      }
+    }
+  }
+
+  // ───────────────────────────────────────────
+  // SAND BAGGER TOGGLE
+  // ───────────────────────────────────────────
+  function toggleSandBagger(el) {
+    isSandBagger = !isSandBagger;
+
+    if (isSandBagger) {
+      // Clear Tier 1 selection
+      delete selections[0];
+      selections[0] = '__SANDBAGGER__';
+      bonusPickTier = null;
+      bonusSelection = null;
+    } else {
+      // Re-enable Tier 1
+      if (selections[0] === '__SANDBAGGER__') delete selections[0];
+      bonusPickTier = null;
+      bonusSelection = null;
+    }
+
+    renderPlayerGroups();
+  }
+
+  function setBonusTier(tierIndex) {
+    if (bonusPickTier === tierIndex) {
+      // Toggle off
+      bonusPickTier = null;
+      bonusSelection = null;
+    } else {
+      bonusPickTier = tierIndex;
+      bonusSelection = null;
+    }
+    renderPlayerGroups();
+  }
+
+  function selectBonusPlayer(playerName, el) {
+    const bonusGroup = document.getElementById('group-bonus');
+    bonusGroup.querySelectorAll('.player-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    bonusSelection = playerName;
+
+    const errEl = document.getElementById('groupError-bonus');
+    if (errEl) errEl.style.display = 'none';
+  }
+
+  function selectBonusWriteIn(el) {
+    const bonusGroup = document.getElementById('group-bonus');
+    bonusGroup.querySelectorAll('.player-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    const input = document.getElementById('writeIn-bonus');
+    if (input) {
+      input.focus();
+      const val = input.value.trim();
+      bonusSelection = val ? `✏️ ${val}` : '';
+    }
+  }
+
+  function updateBonusWriteIn(input) {
+    const card = input.closest('.player-card');
+    const bonusGroup = document.getElementById('group-bonus');
+    if (!card.classList.contains('selected')) {
+      bonusGroup.querySelectorAll('.player-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    }
+    const val = input.value.trim();
+    bonusSelection = val ? `✏️ ${val}` : '';
   }
 
   // ───────────────────────────────────────────
@@ -1291,6 +1456,15 @@
     // Select this one
     el.classList.add('selected');
     selections[groupIndex] = playerName;
+
+    // If selecting from Tier 1, turn off Sand Bagger
+    if (groupIndex === 0 && isSandBagger) {
+      isSandBagger = false;
+      bonusPickTier = null;
+      bonusSelection = null;
+      renderPlayerGroups();
+      return;
+    }
 
     // Clear error
     const errEl = document.getElementById(`groupError-${groupIndex}`);
@@ -1438,6 +1612,11 @@
     if (step === 2) {
       PLAYER_GROUPS.forEach((_, gi) => {
         const errEl = document.getElementById(`groupError-${gi}`);
+        // Sand Bagger skips Tier 1
+        if (gi === 0 && isSandBagger) {
+          errEl.classList.remove('show');
+          return;
+        }
         // Check for empty selection or write-in card selected but input blank
         if (!selections[gi] || selections[gi] === '✏️ ' || selections[gi] === '') {
           errEl.classList.add('show');
@@ -1451,6 +1630,24 @@
           errEl.classList.remove('show');
         }
       });
+
+      // Sand Bagger must have a bonus tier selected and a bonus player picked
+      if (isSandBagger) {
+        if (bonusPickTier === null) {
+          // Find first non-zero group error to show message
+          const errEl = document.getElementById('groupError-0');
+          errEl.textContent = 'Sand Bagger: Please choose which tier gets your bonus pick.';
+          errEl.classList.add('show');
+          valid = false;
+        } else if (!bonusSelection || bonusSelection === '' || bonusSelection === '✏️ ') {
+          const errEl = document.getElementById('groupError-bonus');
+          if (errEl) {
+            errEl.textContent = 'Please select your bonus player.';
+            errEl.style.display = 'block';
+          }
+          valid = false;
+        }
+      }
     }
 
     if (step === 3) {
@@ -1536,28 +1733,64 @@
       </div>
     `;
 
-    PLAYER_GROUPS.forEach((group, gi) => {
+    if (isSandBagger) {
       html += `
-        <div class="summary-row">
-          <span class="summary-label">${group.name.split('—')[0].trim()}</span>
-          <span class="summary-value">${selections[gi] || '—'}</span>
+        <div class="summary-row" style="background:rgba(212,175,55,0.1);padding:8px 12px;border-radius:6px;margin:4px 0;">
+          <span class="summary-label" style="color:var(--masters-gold);">🏌️ Sand Bagger</span>
+          <span class="summary-value" style="color:var(--masters-gold);font-weight:700;">Active — No Tier 1 Pick</span>
         </div>
       `;
+    }
+
+    PLAYER_GROUPS.forEach((group, gi) => {
+      if (gi === 0 && isSandBagger) {
+        html += `
+          <div class="summary-row">
+            <span class="summary-label">${group.name.split('—')[0].trim()}</span>
+            <span class="summary-value" style="color:var(--masters-gold);font-style:italic;">Skipped (Sand Bagger)</span>
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="summary-row">
+            <span class="summary-label">${group.name.split('—')[0].trim()}</span>
+            <span class="summary-value">${selections[gi] || '—'}</span>
+          </div>
+        `;
+      }
+
+      // Show bonus pick if this tier has it
+      if (isSandBagger && bonusPickTier === gi && gi > 0) {
+        html += `
+          <div class="summary-row" style="background:rgba(212,175,55,0.06);padding:4px 12px;border-radius:4px;">
+            <span class="summary-label" style="color:var(--masters-gold);">↳ Bonus Pick (${group.name.split('—')[0].trim()})</span>
+            <span class="summary-value">${bonusSelection || '—'}</span>
+          </div>
+        `;
+      }
     });
 
     // Junk bets in summary
     const chosenJunks = JUNK_BETS.filter(j => selectedJunks.has(j.id));
+
+    // Auto-add sandbagger junk if active
+    if (isSandBagger && !selectedJunks.has('sandbagger')) {
+      selectedJunks.add('sandbagger');
+      selectedFee += 5;
+    }
+    const finalJunks = JUNK_BETS.filter(j => selectedJunks.has(j.id));
+
     html += `
       <div class="summary-row">
         <span class="summary-label">Base Entry</span>
         <span class="summary-value">$${BASE_FEE}</span>
       </div>
     `;
-    if (chosenJunks.length > 0) {
-      chosenJunks.forEach(j => {
+    if (finalJunks.length > 0) {
+      finalJunks.forEach(j => {
         html += `
           <div class="summary-row">
-            <span class="summary-label">Junk: ${j.name}</span>
+            <span class="summary-label">Junk: ${j.name}${j.id === 'sandbagger' && isSandBagger ? ' (auto-added)' : ''}</span>
             <span class="summary-value">+$${j.price}</span>
           </div>
         `;
@@ -1573,18 +1806,26 @@
 
     summary.innerHTML = html;
 
+    // Recalculate total
+    updateRunningTotal();
+
     // Total
     const totalEl = document.getElementById('finalTotal');
     totalEl.style.display = 'flex';
     document.getElementById('finalFeeDisplay').textContent = `$${selectedFee}`;
 
-    // ── Send data (localStorage for now — wire to your backend later) ──
+    // ── Save data ──
     const entry = {
       teamName, captainName, email,
       baseFee: BASE_FEE,
-      junks: chosenJunks.map(j => j.name),
+      isSandBagger,
+      bonusTier: isSandBagger ? PLAYER_GROUPS[bonusPickTier]?.name : null,
+      bonusPick: bonusSelection,
+      junks: finalJunks.map(j => j.name),
       totalFee: selectedFee,
-      players: selections,
+      players: isSandBagger
+        ? { 0: 'SAND BAGGER', ...Object.fromEntries(Object.entries(selections).filter(([k]) => k !== '0')), bonus: bonusSelection }
+        : selections,
       paymentRef: document.getElementById('paymentConfirm').value.trim(),
       timestamp: new Date().toISOString()
     };
@@ -1608,6 +1849,9 @@
     selectedFee = BASE_FEE;
     selectedJunks = new Set();
     selections = {};
+    isSandBagger = false;
+    bonusPickTier = null;
+    bonusSelection = null;
     renderPlayerGroups();
     renderJunkBets();
     updateRunningTotal();
