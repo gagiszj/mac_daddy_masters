@@ -6,469 +6,224 @@
 <title>The Teams | Mac Daddy Santa Masters</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --augusta-dark: #025124;
-  --jacket-green: #015124;
-  --forest-green: #005D1D;
-  --banner-green: #00471F;
-  --masters-gold: #F8C70B;
-  --augusta-yellow: #EFEE00;
-  --flag-red: #CA0032;
-  --white: #FFFFFF;
-  --parchment: #F9F6EE;
-  --black: #000000;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Calibri', 'Segoe UI', sans-serif; background: var(--parchment); color: var(--forest-green); min-height: 100vh; }
-
-.site-header { background: var(--augusta-dark); border-bottom: 4px solid var(--masters-gold); position: sticky; top: 0; z-index: 100; }
-.header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; }
-.brand-title { font-family: 'Playfair Display', Georgia, serif; color: var(--masters-gold); font-size: 1.4rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; }
-.brand-title span { font-style: italic; font-weight: 400; text-transform: none; color: var(--white); font-size: 1rem; margin-left: 6px; }
-nav { display: flex; gap: 0; }
-nav a { color: var(--white); text-decoration: none; font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 18px; transition: color 0.2s; position: relative; }
-nav a:hover, nav a.active { color: var(--masters-gold); }
-nav a.active::after { content: ''; position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); width: 60%; height: 4px; background: var(--masters-gold); }
-
-.page-hero {
-  background: linear-gradient(135deg, var(--augusta-dark) 0%, var(--jacket-green) 40%, var(--banner-green) 100%);
-  padding: 48px 24px 40px; text-align: center; position: relative; overflow: hidden;
-}
-.page-hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(248,199,11,0.03) 40px, rgba(248,199,11,0.03) 80px);
-}
-.page-hero h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 3rem; font-weight: 900; color: var(--masters-gold); letter-spacing: 4px; text-transform: uppercase; position: relative; z-index: 1; }
-.page-hero .subtitle { font-family: 'Playfair Display', Georgia, serif; font-style: italic; color: var(--white); font-size: 1.1rem; margin-top: 8px; opacity: 0.85; position: relative; z-index: 1; }
-
-/* === COUNTDOWN === */
-.countdown-overlay {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 0 24px;
-  text-align: center;
-}
-
-.countdown-card {
-  background: var(--augusta-dark);
-  border: 3px solid var(--masters-gold);
-  border-radius: 4px;
-  padding: 48px 32px;
-  box-shadow: 0 12px 48px rgba(2,81,36,0.3);
-}
-
-.countdown-card h2 {
-  font-family: 'Playfair Display', Georgia, serif;
-  color: var(--masters-gold);
-  font-size: 1.4rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-
-.countdown-card p {
-  color: var(--white);
-  opacity: 0.7;
-  font-size: 0.9rem;
-  margin-bottom: 32px;
-}
-
-.countdown-timer {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin-bottom: 24px;
-}
-
-.countdown-unit {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.countdown-number {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 3.5rem;
-  font-weight: 900;
-  color: var(--masters-gold);
-  line-height: 1;
-  min-width: 80px;
-}
-
-.countdown-label {
-  color: var(--white);
-  font-size: 0.7rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-top: 8px;
-  opacity: 0.6;
-}
-
-.countdown-separator {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 3rem;
-  color: var(--masters-gold);
-  opacity: 0.4;
-  line-height: 1;
-  align-self: flex-start;
-}
-
-.lock-icon {
-  font-size: 3rem;
-  margin-bottom: 16px;
-  opacity: 0.5;
-}
-
-/* === TEAMS GRID === */
-.teams-container {
-  max-width: 1200px;
-  margin: 40px auto 60px;
-  padding: 0 24px;
-}
-
-.teams-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 20px;
-}
-
-.team-card {
-  background: var(--white);
-  border: 2px solid rgba(2,81,36,0.15);
-  border-radius: 4px;
-  overflow: hidden;
-  transition: all 0.25s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-.team-card:hover {
-  border-color: var(--masters-gold);
-  box-shadow: 0 6px 24px rgba(248,199,11,0.15);
-  transform: translateY(-2px);
-}
-
-.team-card-header {
-  background: var(--augusta-dark);
-  padding: 14px 18px;
-  display: flex; justify-content: space-between; align-items: center;
-}
-
-.team-card-header h3 {
-  font-family: 'Playfair Display', Georgia, serif;
-  color: var(--masters-gold);
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.team-card-header .owner-tag {
-  color: var(--white);
-  font-size: 0.75rem;
-  opacity: 0.7;
-}
-
-.team-picks {
-  padding: 16px 18px;
-}
-
-.pick-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(0,93,29,0.08);
-}
-
-.pick-row:last-child { border-bottom: none; }
-
-.pick-group {
-  font-size: 0.7rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: #999;
-  min-width: 65px;
-}
-
-.pick-group.g1 { color: var(--augusta-dark); font-weight: 700; }
-.pick-group.g2 { color: var(--forest-green); font-weight: 700; }
-.pick-group.g3 { color: var(--banner-green); }
-.pick-group.g4 { color: #666; }
-
-.pick-name {
-  flex: 1;
-  font-size: 0.95rem;
-  color: var(--forest-green);
-  margin-left: 12px;
-}
-
-.team-junk {
-  padding: 10px 18px 14px;
-  background: rgba(248,199,11,0.06);
-  border-top: 1px solid rgba(248,199,11,0.2);
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
-.team-junk-label {
-  font-size: 0.7rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: #999;
-  margin-right: 8px;
-}
-
-.junk-badge {
-  display: inline-block;
-  width: 24px; height: 24px;
-  line-height: 24px;
-  text-align: center;
-  font-size: 0.6rem;
-  font-weight: 700;
-  border-radius: 2px;
-  color: var(--white);
-}
-
-.junk-badge.gj { background: var(--masters-gold); color: var(--augusta-dark); }
-.junk-badge.ca { background: var(--flag-red); }
-.junk-badge.sg { background: var(--forest-green); }
-.junk-badge.ace { background: var(--banner-green); }
-.junk-badge.sb { background: #8B6914; }
-.junk-badge.empty { background: transparent; border: 1px dashed #ccc; color: #ccc; }
-
-.team-count {
-  text-align: center;
-  margin-bottom: 24px;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.1rem;
-  color: var(--forest-green);
-}
-
-.team-count strong {
-  color: var(--masters-gold);
-  font-size: 1.4rem;
-}
-
-.site-footer { background: var(--augusta-dark); border-top: 4px solid var(--masters-gold); padding: 32px 24px; text-align: center; }
-.footer-tagline { font-family: 'Playfair Display', Georgia, serif; font-style: italic; color: var(--masters-gold); font-size: 1.1rem; margin-bottom: 8px; }
-.footer-copy { color: rgba(255,255,255,0.5); font-size: 0.75rem; letter-spacing: 1px; }
-
-/* Toggle button */
-.reveal-toggle {
-  display: block;
-  margin: 0 auto 32px;
-  padding: 14px 40px;
-  background: var(--masters-gold);
-  color: var(--augusta-dark);
-  border: none;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.2s;
-}
-
-.reveal-toggle:hover {
-  background: var(--augusta-yellow);
-  box-shadow: 0 4px 16px rgba(248,199,11,0.4);
-}
-
-@media (max-width: 768px) {
-  .header-inner { flex-direction: column; gap: 12px; }
-  .page-hero h1 { font-size: 2rem; }
-  nav a { padding: 6px 10px; font-size: 0.75rem; }
-  .countdown-number { font-size: 2.5rem; }
-  .teams-grid { grid-template-columns: 1fr; }
-}
+:root{--augusta-dark:#025124;--jacket-green:#015124;--forest-green:#005D1D;--banner-green:#00471F;--masters-gold:#F8C70B;--flag-red:#CA0032;--white:#FFF;--parchment:#F9F6EE}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Calibri','Segoe UI',sans-serif;background:var(--parchment);color:var(--forest-green);min-height:100vh}
+.site-header{background:var(--augusta-dark);border-bottom:4px solid var(--masters-gold);position:sticky;top:0;z-index:100}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 24px}
+.brand-title{font-family:'Playfair Display',Georgia,serif;color:var(--masters-gold);font-size:1.4rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;text-decoration:none}
+.brand-title span{font-style:italic;font-weight:400;text-transform:none;color:var(--white);font-size:1rem;margin-left:6px}
+nav{display:flex}nav a{color:var(--white);text-decoration:none;font-size:.85rem;letter-spacing:1.5px;text-transform:uppercase;padding:8px 18px;transition:color .2s;position:relative}
+nav a:hover,nav a.active{color:var(--masters-gold)}nav a.active::after{content:'';position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);width:60%;height:4px;background:var(--masters-gold)}
+.page-hero{background:linear-gradient(135deg,var(--augusta-dark),var(--jacket-green) 40%,var(--banner-green));padding:48px 24px 40px;text-align:center;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(248,199,11,.03) 40px,rgba(248,199,11,.03) 80px)}
+.page-hero h1{font-family:'Playfair Display',Georgia,serif;font-size:3rem;font-weight:900;color:var(--masters-gold);letter-spacing:4px;text-transform:uppercase;position:relative;z-index:1}
+.page-hero .subtitle{font-family:'Playfair Display',Georgia,serif;font-style:italic;color:var(--white);font-size:1.1rem;margin-top:8px;opacity:.85;position:relative;z-index:1}
+.countdown-overlay{max-width:800px;margin:40px auto;padding:0 24px;text-align:center}
+.countdown-card{background:var(--augusta-dark);border:3px solid var(--masters-gold);border-radius:4px;padding:48px 32px;box-shadow:0 12px 48px rgba(2,81,36,.3)}
+.countdown-card h2{font-family:'Playfair Display',Georgia,serif;color:var(--masters-gold);font-size:1.4rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.countdown-card p{color:var(--white);opacity:.7;font-size:.9rem;margin-bottom:32px}
+.countdown-timer{display:flex;justify-content:center;gap:24px;margin-bottom:24px}
+.countdown-unit{display:flex;flex-direction:column;align-items:center}
+.countdown-number{font-family:'Playfair Display',Georgia,serif;font-size:3.5rem;font-weight:900;color:var(--masters-gold);line-height:1;min-width:80px}
+.countdown-label{color:var(--white);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;margin-top:8px;opacity:.6}
+.countdown-separator{font-family:'Playfair Display',Georgia,serif;font-size:3rem;color:var(--masters-gold);opacity:.4;line-height:1}
+.teams-container{max-width:1200px;margin:40px auto 60px;padding:0 24px}
+.teams-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.team-card{background:var(--white);border:2px solid rgba(2,81,36,.15);border-radius:4px;overflow:hidden;transition:all .25s;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.team-card:hover{border-color:var(--masters-gold);box-shadow:0 6px 24px rgba(248,199,11,.15);transform:translateY(-2px)}
+.team-card-header{background:var(--augusta-dark);padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+.team-card-header h3{font-family:'Playfair Display',Georgia,serif;color:var(--masters-gold);font-size:1rem;font-weight:700}
+.team-card-header .owner-tag{color:var(--white);font-size:.75rem;opacity:.7}
+.team-picks{padding:16px 18px}.pick-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,93,29,.08)}.pick-row:last-child{border-bottom:none}
+.pick-group{font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:#999;min-width:65px;font-weight:700}
+.pick-name{flex:1;font-size:.95rem;color:var(--forest-green);margin-left:12px}
+.team-junk{padding:10px 18px 14px;background:rgba(248,199,11,.06);border-top:1px solid rgba(248,199,11,.2);display:flex;gap:6px;align-items:center}
+.team-junk-label{font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:#999;margin-right:8px}
+.junk-badge{display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;font-size:.6rem;font-weight:700;border-radius:2px;color:var(--white)}
+.junk-badge.gj{background:var(--masters-gold);color:var(--augusta-dark)}.junk-badge.ca{background:var(--flag-red)}.junk-badge.sg{background:var(--forest-green)}.junk-badge.ace{background:var(--banner-green)}.junk-badge.sb{background:#8B6914}.junk-badge.empty{background:transparent;border:1px dashed #ccc;color:#ccc}
+.team-count{text-align:center;margin-bottom:24px;font-family:'Playfair Display',Georgia,serif;font-size:1.1rem;color:var(--forest-green)}.team-count strong{color:var(--masters-gold);font-size:1.4rem}
+.loading{text-align:center;padding:60px;font-family:'Playfair Display',Georgia,serif;color:var(--forest-green);font-style:italic;font-size:1.1rem}
+.sb-badge{display:inline-block;padding:2px 8px;background:var(--masters-gold);color:var(--augusta-dark);font-size:.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:2px;margin-left:8px}
+.site-footer{background:var(--augusta-dark);border-top:4px solid var(--masters-gold);padding:32px 24px;text-align:center}
+.footer-tagline{font-family:'Playfair Display',Georgia,serif;font-style:italic;color:var(--masters-gold);font-size:1.1rem;margin-bottom:8px}
+.footer-copy{color:rgba(255,255,255,.5);font-size:.75rem;letter-spacing:1px}
+@media(max-width:768px){.header-inner{flex-direction:column;gap:12px}.page-hero h1{font-size:2rem}nav a{padding:6px 10px;font-size:.75rem}.teams-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <a href="index.html" class="brand-title">MAC DADDY SANTA <span>Masters</span></a>
-    <nav>
-      <a href="leaderboard.html">Leaderboard</a>
-      <a href="teams.html" class="active">Teams</a>
-      <a href="scorecards.html">Scorecards</a>
-      <a href="index.html">Home</a>
-    </nav>
-  </div>
-</header>
-
-<section class="page-hero">
-  <h1>The Selections</h1>
-  <p class="subtitle">5th Annual Mac Daddy Santa Masters</p>
-</section>
-
-<!-- COUNTDOWN (shown before reveal) -->
-<div class="countdown-overlay" id="countdown-section">
-  <div class="countdown-card">
-    <div class="lock-icon">🔒</div>
-    <h2>Selections Are Locked</h2>
-    <p>Teams will be revealed Wednesday at midnight — the night before the tournament.</p>
-    <div class="countdown-timer">
-      <div class="countdown-unit">
-        <div class="countdown-number" id="cd-days">--</div>
-        <div class="countdown-label">Days</div>
-      </div>
-      <div class="countdown-separator">:</div>
-      <div class="countdown-unit">
-        <div class="countdown-number" id="cd-hours">--</div>
-        <div class="countdown-label">Hours</div>
-      </div>
-      <div class="countdown-separator">:</div>
-      <div class="countdown-unit">
-        <div class="countdown-number" id="cd-mins">--</div>
-        <div class="countdown-label">Minutes</div>
-      </div>
-      <div class="countdown-separator">:</div>
-      <div class="countdown-unit">
-        <div class="countdown-number" id="cd-secs">--</div>
-        <div class="countdown-label">Seconds</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- TEAMS (hidden until reveal OR test mode) -->
-<div class="teams-container" id="teams-section" style="display:none;">
-  <p class="team-count"><strong id="team-total">0</strong> Contestants &nbsp;|&nbsp; The Field is Set</p>
-  
-  <!-- TEST MODE TOGGLE — Remove for production -->
-  <button class="reveal-toggle" id="toggle-btn" onclick="toggleVisibility()" style="display:none;">
-    Toggle Countdown / Teams (Commissioner Only)
-  </button>
-
-  <div class="teams-grid" id="teams-grid"></div>
-</div>
-
-<footer class="site-footer">
-  <p class="footer-tagline">A tradition unlike any other.</p>
-  <p class="footer-copy">MAC DADDY SANTA MASTERS &copy; 2025 &nbsp;|&nbsp; #MacDaddySantaMasters</p>
-</footer>
-
+<header class="site-header"><div class="header-inner"><a href="index.html" class="brand-title">MAC DADDY SANTA <span>Masters</span></a><nav><a href="leaderboard.html">Leaderboard</a><a href="teams.html" class="active">Teams</a><a href="scorecards.html">Scorecards</a><a href="index.html">Home</a></nav></div></header>
+<section class="page-hero"><h1>The Selections</h1><p class="subtitle">6th Annual Mac Daddy Santa Masters</p></section>
+<div class="countdown-overlay" id="countdown-section"><div class="countdown-card"><div style="font-size:3rem;margin-bottom:16px;opacity:.5">🔒</div><h2>Selections Are Locked</h2><p>Teams will be revealed Wednesday at midnight — the night before the tournament.</p><div class="countdown-timer"><div class="countdown-unit"><div class="countdown-number" id="cd-days">--</div><div class="countdown-label">Days</div></div><div class="countdown-separator">:</div><div class="countdown-unit"><div class="countdown-number" id="cd-hours">--</div><div class="countdown-label">Hours</div></div><div class="countdown-separator">:</div><div class="countdown-unit"><div class="countdown-number" id="cd-mins">--</div><div class="countdown-label">Minutes</div></div><div class="countdown-separator">:</div><div class="countdown-unit"><div class="countdown-number" id="cd-secs">--</div><div class="countdown-label">Seconds</div></div></div></div></div>
+<div class="teams-container" id="teams-section" style="display:none"><p class="team-count"><strong id="team-total">0</strong> Contestants &nbsp;|&nbsp; The Field is Set</p><div class="teams-grid" id="teams-grid"></div></div>
+<footer class="site-footer"><p class="footer-tagline">A tradition unlike any other.</p><p class="footer-copy">MAC DADDY SANTA MASTERS © 2026 | #MacDaddySantaMasters</p></footer>
 <script>
-// =====================================================
-// CONFIGURATION
-// =====================================================
+// ═══ GOOGLE SHEET URLS ═══
+const SIGNUPS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJEytoxQWuzK8bUIL55K6D31tkS8tNJeP9JeJ2b7o14r_uThWq3RxSKo8-MQjQuZTEpBH97KxQk8Ub/pub?gid=0&single=true&output=csv';
+const SCORES_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSJEytoxQWuzK8bUIL55K6D31tkS8tNJeP9JeJ2b7o14r_uThWq3RxSKo8-MQjQuZTEpBH97KxQk8Ub/pub?gid=901010694&single=true&output=csv';
 
-// SET THE REVEAL DATE — Wednesday midnight before the tournament
-// Format: Year, Month (0-indexed), Day, Hour, Minute
-// April 6, 2025, 11:59 PM ET = April 7 midnight
-const REVEAL_DATE = new Date(2025, 3, 9, 0, 0, 0); // Wed Apr 9, 2025, midnight
+function parseCSVLine(line) {
+  const result = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') inQ = !inQ;
+    else if (c === ',' && !inQ) { result.push(cur); cur = ''; }
+    else cur += c;
+  }
+  result.push(cur);
+  return result;
+}
 
-// TEST MODE: Set to true to bypass countdown and show teams immediately
-const TEST_MODE = true;
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = parseCSVLine(lines[0]);
+  return lines.slice(1).map(line => {
+    const vals = parseCSVLine(line);
+    const obj = {};
+    headers.forEach((h, i) => obj[h.trim()] = (vals[i] || '').trim());
+    return obj;
+  });
+}
 
-// =====================================================
-// TEAM DATA — Replace with real picks
-// =====================================================
-const teams = [
-  { name: "T-6 Mafia", owner: "AJ Gagis", g1: "Scottie Scheffler", g2: "Hideki Matsuyama", g3: "Adam Scott", g4: "Corey Conners", gj: true, ca: true, sg: true, ace: true, sb: true },
-  { name: "Irish Tiger", owner: "Matt Hanna", g1: "Rory McIlroy", g2: "Tony Finau", g3: "Tommy Fleetwood", g4: "Corey Conners", gj: true, ca: true, sg: true, ace: true, sb: false },
-  { name: "The Giggys!", owner: "Kid Nantz", g1: "Xander Schauffele", g2: "Cameron Smith", g3: "Max Homa", g4: "Christiaan Bezuidenhout", gj: true, ca: true, sg: true, ace: true, sb: false },
-  { name: "ROCK, FLAG AND EAGLE!", owner: "Cooper Morris", g1: "Xander Schauffele", g2: "Cameron Smith", g3: "Max Homa", g4: "Will Zalatoris", gj: true, ca: false, sg: true, ace: false, sb: false },
-  { name: "Wubblesnubbitz", owner: "PJ Lally", g1: "Jon Rahm", g2: "Tony Finau", g3: "Scottie Scheffler", g4: "Will Zalatoris", gj: true, ca: true, sg: true, ace: true, sb: false },
-  { name: "Cuomosapien", owner: "Charlie McCarthy", g1: "Collin Morikawa", g2: "Hideki Matsuyama", g3: "Abraham Ancer", g4: "Phil Mickelson", gj: true, ca: true, sg: true, ace: true, sb: false },
-  { name: "83 in a 45", owner: "Teddy Economos", g1: "Bryson DeChambeau", g2: "Viktor Hovland", g3: "Tommy Fleetwood", g4: "Matt Kuchar", gj: true, ca: false, sg: true, ace: false, sb: false },
-  { name: "SNED NUDS", owner: "Bryan Conover", g1: "Jon Rahm", g2: "Tony Finau", g3: "Bubba Watson", g4: "Phil Mickelson", gj: true, ca: true, sg: true, ace: false, sb: false },
-  { name: "The Sleepy Joe's", owner: "Thomas Mickelson", g1: "Dustin Johnson", g2: "Webb Simpson", g3: "Tommy Fleetwood", g4: "Phil Mickelson", gj: true, ca: true, sg: false, ace: false, sb: false },
-  { name: "Sweet Georgia Peach", owner: "Zach Enix", g1: "Brooks Koepka", g2: "Daniel Berger", g3: "Sergio Garcia", g4: "Si-Woo Kim", gj: false, ca: false, sg: true, ace: false, sb: false },
-  { name: "Bagel Train", owner: "George Gebelen", g1: "Dustin Johnson", g2: "Webb Simpson", g3: "Louis Oosthuizen", g4: "Kevin Kisner", gj: false, ca: false, sg: false, ace: false, sb: false },
-  { name: "Code Brown 1", owner: "Doug Brown", g1: "Patrick Cantlay", g2: "Paul Casey", g3: "Abraham Ancer", g4: "Gary Woodland", gj: false, ca: false, sg: false, ace: false, sb: false },
-];
+async function fetchData() {
+  const [signupsRes, scoresRes] = await Promise.all([
+    fetch(SIGNUPS_CSV).then(r => r.text()).catch(() => ''),
+    fetch(SCORES_CSV).then(r => r.text()).catch(() => '')
+  ]);
+  const signups = parseCSV(signupsRes).filter(r => r['Team Name']);
+  const scoresRaw = parseCSV(scoresRes).filter(r => r['Player']);
+  const scores = {};
+  scoresRaw.forEach(s => {
+    scores[s['Player']] = {
+      r1: s['R1'] === '' || s['R1'] === undefined ? null : (s['R1'] === 'MC' ? 'MC' : Number(s['R1'])),
+      r2: s['R2'] === '' || s['R2'] === undefined ? null : (s['R2'] === 'MC' ? 'MC' : Number(s['R2'])),
+      r3: s['R3'] === '' || s['R3'] === undefined ? null : (s['R3'] === 'MC' ? 'MC' : Number(s['R3'])),
+      r4: s['R4'] === '' || s['R4'] === undefined ? null : (s['R4'] === 'MC' ? 'MC' : Number(s['R4']))
+    };
+  });
+  return { signups, scores };
+}
 
-// =====================================================
-// RENDER
-// =====================================================
-function renderTeams() {
+function getTeamPlayers(team) {
+  const isSB = (team['Sand Bagger'] || '').toUpperCase() === 'YES';
+  const players = [];
+  if (!isSB && team['Tier 1']) players.push(team['Tier 1']);
+  if (team['Tier 2']) players.push(team['Tier 2']);
+  if (team['Tier 3']) players.push(team['Tier 3']);
+  if (team['Tier 4']) players.push(team['Tier 4']);
+  if (isSB && team['Bonus Pick']) players.push(team['Bonus Pick']);
+  if (isSB && team['Tier 1'] && team['Tier 1'] !== 'SAND BAGGER' && team['Tier 1'] !== '') players.push(team['Tier 1']);
+  // Ensure exactly 4 players
+  return players.slice(0, 4);
+}
+
+function calcTeamScore(team, scores) {
+  const players = getTeamPlayers(team);
+  if (players.length === 0) return { total: null, junk: 0, final: null, dq: false, mcCount: 0, playerScores: [] };
+
+  const playerScores = players.map(name => {
+    const s = scores[name] || { r1: null, r2: null, r3: null, r4: null };
+    return { name, ...s };
+  });
+
+  // Count missed cuts
+  const mcCount = playerScores.filter(p => p.r3 === 'MC').length;
+  if (mcCount >= 3) return { total: 'DQ', junk: 0, final: 'DQ', dq: true, mcCount, playerScores };
+
+  // R1: all 4 count
+  const r1Sum = playerScores.reduce((s, p) => s + (typeof p.r1 === 'number' ? p.r1 : 0), 0);
+  // R2: all 4 count
+  const r2Sum = playerScores.reduce((s, p) => s + (typeof p.r2 === 'number' ? p.r2 : 0), 0);
+  // R3: best 2 x2 (exclude MC = use 999)
+  const r3Vals = playerScores.map(p => typeof p.r3 === 'number' ? p.r3 : 999).sort((a,b) => a-b);
+  const r3Sum = 2 * ((r3Vals[0] < 999 ? r3Vals[0] : 0) + (r3Vals[1] < 999 ? r3Vals[1] : 0));
+  // R4: best 1 x3 (exclude MC)
+  const r4Vals = playerScores.map(p => typeof p.r4 === 'number' ? p.r4 : 999).sort((a,b) => a-b);
+  const r4Sum = 3 * (r4Vals[0] < 999 ? r4Vals[0] : 0);
+
+  const hasScores = playerScores.some(p => p.r1 !== null);
+  const total = hasScores ? r1Sum + r2Sum + r3Sum + r4Sum : null;
+
+  // Junk (simplified — GJ/CA need manual champion/leader entry in Scores tab)
+  const junks = (team['Junks'] || '').toLowerCase();
+  let junk = 0;
+  if (junks.includes('sand') || junks.includes('sandbagger')) junk -= 5;
+  // Scratch Golfer: -5 per player with all 4 rounds <= 0
+  if (junks.includes('scratch')) {
+    playerScores.forEach(p => {
+      if (typeof p.r1 === 'number' && typeof p.r2 === 'number' && typeof p.r3 === 'number' && typeof p.r4 === 'number') {
+        if (Math.max(p.r1, p.r2, p.r3, p.r4) <= 0) junk -= 5;
+      }
+    });
+  }
+
+  const final = total !== null ? total + junk : null;
+  return { total, junk, final, dq: false, mcCount, playerScores };
+}
+
+function fmtScore(s) {
+  if (s === 'DQ') return 'DQ';
+  if (s === null || s === undefined) return '—';
+  if (s < 0) return String(s);
+  if (s === 0) return 'E';
+  return '+' + s;
+}
+function scoreClass(s) {
+  if (s === 'DQ') return 'score-dq';
+  if (typeof s !== 'number') return '';
+  if (s < 0) return 'score-under';
+  if (s > 0) return 'score-over';
+  return 'score-even';
+}
+
+const REVEAL_DATE = new Date(2026, 3, 9, 0, 0, 0);
+const TEST_MODE = false;
+
+function renderTeams(teams) {
   const grid = document.getElementById('teams-grid');
   document.getElementById('team-total').textContent = teams.length;
-  
+  grid.innerHTML = '';
   teams.forEach(t => {
-    const junkBadges = [
-      t.gj ? '<span class="junk-badge gj">GJ</span>' : '<span class="junk-badge empty">GJ</span>',
-      t.ca ? '<span class="junk-badge ca">CA</span>' : '<span class="junk-badge empty">CA</span>',
-      t.sg ? '<span class="junk-badge sg">SG</span>' : '<span class="junk-badge empty">SG</span>',
-      t.ace ? '<span class="junk-badge ace">ACE</span>' : '<span class="junk-badge empty">ACE</span>',
-      t.sb ? '<span class="junk-badge sb">SB</span>' : '<span class="junk-badge empty">SB</span>',
-    ].join('');
-
-    const card = document.createElement('div');
-    card.className = 'team-card';
-    card.innerHTML = `
-      <div class="team-card-header">
-        <h3>${t.name}</h3>
-        <span class="owner-tag">${t.owner}</span>
-      </div>
-      <div class="team-picks">
-        <div class="pick-row"><span class="pick-group g1">Group 1</span><span class="pick-name">${t.g1}</span></div>
-        <div class="pick-row"><span class="pick-group g2">Group 2</span><span class="pick-name">${t.g2}</span></div>
-        <div class="pick-row"><span class="pick-group g3">Group 3</span><span class="pick-name">${t.g3}</span></div>
-        <div class="pick-row"><span class="pick-group g4">Group 4</span><span class="pick-name">${t.g4}</span></div>
-      </div>
-      <div class="team-junk">
-        <span class="team-junk-label">Junk</span>
-        ${junkBadges}
-      </div>
-    `;
+    const isSB = (t['Sand Bagger']||'').toUpperCase()==='YES';
+    const junks = (t['Junks']||'').split(',').map(j=>j.trim()).filter(Boolean);
+    const jMap={gj:'Green Jacket',ca:'Choke Artist',sg:'Scratch Golfer',ace:'Ace',sb:'Sandbagger'};
+    const badges = Object.entries(jMap).map(([cls,name])=>{
+      const labels={gj:'GJ',ca:'CA',sg:'SG',ace:'ACE',sb:'SB'};
+      const has=junks.some(j=>j.toLowerCase().includes(name.toLowerCase()));
+      return `<span class="junk-badge ${has?cls:'empty'}">${labels[cls]}</span>`;
+    }).join('');
+    const card=document.createElement('div');card.className='team-card';
+    card.innerHTML=`<div class="team-card-header"><h3>${t['Team Name']}${isSB?'<span class="sb-badge">Sand Bagger</span>':''}</h3><span class="owner-tag">${t['Owner']||''}</span></div>
+    <div class="team-picks">
+      <div class="pick-row"><span class="pick-group">${isSB?'Skipped':'Tier 1'}</span><span class="pick-name">${isSB?'—':(t['Tier 1']||'—')}</span></div>
+      <div class="pick-row"><span class="pick-group">Tier 2</span><span class="pick-name">${t['Tier 2']||'—'}</span></div>
+      <div class="pick-row"><span class="pick-group">Tier 3</span><span class="pick-name">${t['Tier 3']||'—'}</span></div>
+      <div class="pick-row"><span class="pick-group">Tier 4</span><span class="pick-name">${t['Tier 4']||'—'}</span></div>
+      ${isSB&&t['Bonus Pick']?`<div class="pick-row"><span class="pick-group" style="color:var(--masters-gold)">Bonus</span><span class="pick-name" style="color:var(--masters-gold)">${t['Bonus Pick']}</span></div>`:''}
+    </div><div class="team-junk"><span class="team-junk-label">Junk</span>${badges}</div>`;
     grid.appendChild(card);
   });
 }
 
-// =====================================================
-// COUNTDOWN LOGIC
-// =====================================================
-function updateCountdown() {
-  const now = new Date();
-  const diff = REVEAL_DATE - now;
-  
-  if (diff <= 0 || TEST_MODE) {
-    showTeams();
-    return;
-  }
-  
-  const days = Math.floor(diff / (1000*60*60*24));
-  const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-  const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
-  const secs = Math.floor((diff % (1000*60)) / 1000);
-  
-  document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
-  document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
-  document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
-  document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+function showTeams(){
+  document.getElementById('countdown-section').style.display='none';
+  document.getElementById('teams-section').style.display='block';
+  fetch(SIGNUPS_CSV).then(r=>r.text()).then(csv=>{
+    const teams=parseCSV(csv).filter(r=>r['Team Name']);
+    if(!teams.length){document.getElementById('teams-grid').innerHTML='<div class="loading">No teams registered yet. Be the first!</div>';document.getElementById('team-total').textContent='0';}
+    else renderTeams(teams);
+  }).catch(()=>{document.getElementById('teams-grid').innerHTML='<div class="loading">Unable to load. Please refresh.</div>';});
 }
 
-function showTeams() {
-  document.getElementById('countdown-section').style.display = 'none';
-  document.getElementById('teams-section').style.display = 'block';
-  if (TEST_MODE) document.getElementById('toggle-btn').style.display = 'block';
-  renderTeams();
+function updateCountdown(){
+  const diff=REVEAL_DATE-new Date();
+  if(diff<=0||TEST_MODE){showTeams();return;}
+  const d=Math.floor(diff/864e5),h=Math.floor(diff%864e5/36e5),m=Math.floor(diff%36e5/6e4),s=Math.floor(diff%6e4/1e3);
+  document.getElementById('cd-days').textContent=String(d).padStart(2,'0');
+  document.getElementById('cd-hours').textContent=String(h).padStart(2,'0');
+  document.getElementById('cd-mins').textContent=String(m).padStart(2,'0');
+  document.getElementById('cd-secs').textContent=String(s).padStart(2,'0');
 }
-
-function toggleVisibility() {
-  const countdown = document.getElementById('countdown-section');
-  const teams = document.getElementById('teams-section');
-  if (countdown.style.display === 'none') {
-    countdown.style.display = 'block';
-    teams.style.display = 'none';
-  } else {
-    countdown.style.display = 'none';
-    teams.style.display = 'block';
-  }
-}
-
-// Init
-if (TEST_MODE) {
-  showTeams();
-} else {
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-}
-</script>
-
-</body>
-</html>
+if(TEST_MODE)showTeams();else{updateCountdown();setInterval(updateCountdown,1000);}
+</script></body></html>
