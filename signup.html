@@ -1835,6 +1835,19 @@
     entries.push(entry);
     localStorage.setItem('macdaddy_entries', JSON.stringify(entries));
 
+    // ── Send to Google Sheets for Commissioner backup ──
+    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyVTtT2a78BrU0SArh1SRC1kYOUe0gjh0YHJjAtD4GITcSGQaJaQw67QElZXUCNzq4Q9g/exec';
+    fetch(GOOGLE_SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry)
+    }).then(() => {
+      console.log('Entry sent to Google Sheets');
+    }).catch(err => {
+      console.warn('Google Sheets backup failed (entry still saved locally):', err);
+    });
+
     console.log('Mac Daddy Masters Entry Saved:', entry);
   }
 
