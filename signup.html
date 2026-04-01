@@ -1838,12 +1838,31 @@
     // ── Send to Google Sheets for Commissioner backup ──
     const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyVTtT2a78BrU0SArh1SRC1kYOUe0gjh0YHJjAtD4GITcSGQaJaQw67QElZXUCNzq4Q9g/exec';
 
-    fetch(GOOGLE_SHEET_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(entry)
-    }).catch(err => console.warn('Sheet sync failed:', err));
+    // Use hidden iframe + form POST to avoid CORS issues with Google Apps Script
+    let sheetFrame = document.getElementById('sheet-submit-frame');
+    if (!sheetFrame) {
+      sheetFrame = document.createElement('iframe');
+      sheetFrame.id = 'sheet-submit-frame';
+      sheetFrame.name = 'sheet-submit-frame';
+      sheetFrame.style.display = 'none';
+      document.body.appendChild(sheetFrame);
+    }
+
+    const sheetForm = document.createElement('form');
+    sheetForm.method = 'POST';
+    sheetForm.action = GOOGLE_SHEET_URL;
+    sheetForm.target = 'sheet-submit-frame';
+    sheetForm.style.display = 'none';
+
+    const payloadInput = document.createElement('input');
+    payloadInput.type = 'hidden';
+    payloadInput.name = 'payload';
+    payloadInput.value = JSON.stringify(entry);
+    sheetForm.appendChild(payloadInput);
+
+    document.body.appendChild(sheetForm);
+    sheetForm.submit();
+    setTimeout(() => { document.body.removeChild(sheetForm); }, 2000);
 
     console.log('Mac Daddy Masters Entry Saved:', entry);
   }
