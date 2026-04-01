@@ -215,20 +215,13 @@ async function renderLeaderboard() {
       return has ? `<span class="junk-badge ${cls}">${{gj:'GJ',ca:'CA',sg:'SG',ace:'ACE',sb:'SB'}[cls]}</span>` : '';
     }).filter(Boolean).join('');
 
-    const players = getTeamPlayers(t);
-    const playerList = players.map(p => {
-      const s = scores[p];
-      const mc = s && s.r3 === 'MC' ? '<span class="mc-tag">MC</span>' : '';
-      return p.split(' ').pop() + mc;
-    }).join(' · ');
-
     const tr = document.createElement('tr');
     if (i === 0 && !r.dq) tr.classList.add('leader');
     if (r.dq) tr.classList.add('dq');
     tr.innerHTML = `
       <td>${r.dq ? '—' : (i+1)}</td>
       <td><div class="team-name">${t['Team Name']}</div><div class="owner-name">${t['Owner']||''}</div></td>
-      <td style="font-size:.8rem;color:#666">${playerList}</td>
+      <td style="font-size:.8rem;color:#999;letter-spacing:1px;">🔒 Revealed at Tee Time</td>
       <td class="${scoreClass(r.total)}">${fmtScore(r.total)}</td>
       <td>${r.junk ? fmtScore(r.junk) : '—'}</td>
       <td class="${scoreClass(r.final)}" style="font-weight:900;font-size:1.1rem">${fmtScore(r.final)}</td>
