@@ -213,16 +213,6 @@ function renderScorecard(team, scores) {
     return `<span class="junk-badge ${has?cls:'empty'}">${labels[cls]}</span>`;
   }).join('');
 
-  const tiers = isSB ? ['Bonus','Tier 2','Tier 3','Tier 4'] : ['Tier 1','Tier 2','Tier 3','Tier 4'];
-  const rows = players.map((name, i) => {
-    const s = scores[name] || {r1:null,r2:null,r3:null,r4:null};
-    const pt = playerTotal(s);
-    const ptCls = s.r1===null ? '' : (pt<0?'round-under':pt>0?'round-over':'round-even');
-    return `<tr><td><span class="group-label">${tiers[i]||''}</span>${name}</td>
-      <td>${fmtRound(s.r1)}</td><td>${fmtRound(s.r2)}</td><td>${fmtRound(s.r3)}</td><td>${fmtRound(s.r4)}</td>
-      <td class="total-cell ${ptCls}">${s.r1!==null?fmtScore(pt):'—'}</td></tr>`;
-  }).join('');
-
   const card = document.createElement('div');
   card.className = 'scorecard';
   card.dataset.owner = team['Owner']||'';
@@ -231,7 +221,9 @@ function renderScorecard(team, scores) {
   card.innerHTML = `
     <div class="scorecard-header"><div><h3>${team['Team Name']}${result.dq?'<span style="color:var(--flag-red);font-size:.7rem;margin-left:8px">DQ</span>':''}</h3><span class="sc-owner">${team['Owner']||''}</span></div>
     <div class="sc-total ${totalCls}">${fmtScore(result.final)}</div></div>
-    <table class="scorecard-table"><thead><tr><th>Player</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Total</th></tr></thead><tbody>${rows}</tbody></table>
+    <div style="padding:28px;text-align:center;color:#999;font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:.95rem;border-bottom:1px solid rgba(0,93,29,.08);">
+      🔒 Team selections revealed at tee time
+    </div>
     <div class="scorecard-junk"><span class="jl">Junk</span>${badges}
     <span class="junk-score ${result.junk<0?'round-under':''}">${result.junk?fmtScore(result.junk):'—'}</span></div>`;
   return card;
