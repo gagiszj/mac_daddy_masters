@@ -1024,22 +1024,6 @@
         </div>
       </form>
 
-      <script>
-        document.getElementById('caption-form').addEventListener('submit', function() {
-          const entry = {
-            type: 'caption',
-            timestamp: new Date().toISOString(),
-            name: document.getElementById('caption-name').value.trim(),
-            caption: document.getElementById('caption-text').value.trim()
-          };
-          fetch('https://script.google.com/macros/s/AKfycbyVTtT2a78BrU0SArh1SRC1kYOUe0gjh0YHJjAtD4GITcSGQaJaQw67QElZXUCNzq4Q9g/exec', {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify(entry)
-          }).catch(err => console.warn('Caption sheet sync failed:', err));
-        });
-      </script>
 
       <p style="text-align:center;font-family:Georgia,serif;font-style:italic;font-size:13px;color:rgba(2,81,36,0.4);margin-top:24px;" class="reveal reveal-delay-4">
         Winner selected by the Commissioner. Decision is final.
