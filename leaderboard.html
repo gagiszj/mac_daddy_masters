@@ -239,7 +239,7 @@ async function renderLeaderboard() {
     tr.innerHTML = `
       <td>${r.dq ? '—' : (i+1)}</td>
       <td><div class="team-name">${t['Team Name']}</div><div class="owner-name">${t['Owner']||''}</div></td>
-      <td style="font-size:.8rem;color:#999;letter-spacing:1px;">🔒 Revealed at Tee Time</td>
+      <td style="font-size:.8rem;color:var(--forest-green);line-height:1.6">${getTeamPlayers(t).join('<br>')}</td>
       <td class="${scoreClass(r.total)}">${fmtScore(r.total)}</td>
       <td>${r.junk ? fmtScore(r.junk) : '—'}</td>
       <td class="${scoreClass(r.final)}" style="font-weight:900;font-size:1.1rem">${fmtScore(r.final)}</td>
