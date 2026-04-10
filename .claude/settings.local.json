@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.espn.com)",
+      "WebFetch(domain:docs.google.com)",
+      "WebFetch(domain:doc-0s-28-sheets.googleusercontent.com)"
+    ]
+  }
+}
