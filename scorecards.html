@@ -236,12 +236,34 @@ function renderScorecard(team, scores) {
   card.dataset.owner = team['Owner']||'';
   card.dataset.name = team['Team Name']||'';
   card.dataset.score = result.final !== null ? result.final : 9999;
+  const ps1 = resolveDNP(result.playerScores, 'r1');
+  const ps2 = resolveDNP(result.playerScores, 'r2');
+  const dnpR1 = Object.fromEntries(ps1.map(p => [p.name, p.r1]));
+  const dnpR2 = Object.fromEntries(ps2.map(p => [p.name, p.r2]));
+
+  const playerRows = result.playerScores.map(p => {
+    const r1 = dnpR1[p.name]; const r2 = dnpR2[p.name];
+    const r1Orig = p.r1; const r2Orig = p.r2;
+    const r1Disp = r1Orig === 'DNP' ? `<span style="color:#c0a000;font-style:italic;font-size:.8rem" title="DNP — worst teammate score applied">${fmtRound(r1)}*</span>` : fmtRound(r1);
+    const r2Disp = r2Orig === 'DNP' ? `<span style="color:#c0a000;font-style:italic;font-size:.8rem" title="DNP — worst teammate score applied">${fmtRound(r2)}*</span>` : fmtRound(r2);
+    const tot = playerTotal({r1: typeof r1==='number'?r1:0, r2: typeof r2==='number'?r2:0, r3: p.r3, r4: p.r4});
+    return `<tr>
+      <td>${p.name}</td>
+      <td>${r1Disp}</td>
+      <td>${fmtRound(p.r2 === 'DNP' ? r2 : p.r2)}</td>
+      <td>${fmtRound(p.r3)}</td>
+      <td>${fmtRound(p.r4)}</td>
+      <td class="total-cell">${fmtRound(tot || null)}</td>
+    </tr>`;
+  }).join('');
+
   card.innerHTML = `
     <div class="scorecard-header"><div><h3>${team['Team Name']}${result.dq?'<span style="color:var(--flag-red);font-size:.7rem;margin-left:8px">DQ</span>':''}</h3><span class="sc-owner">${team['Owner']||''}</span></div>
     <div class="sc-total ${totalCls}">${fmtScore(result.final)}</div></div>
-    <div style="padding:28px;text-align:center;color:#999;font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:.95rem;border-bottom:1px solid rgba(0,93,29,.08);">
-      🔒 Team selections revealed at tee time
-    </div>
+    <table class="scorecard-table">
+      <thead><tr><th>Player</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Total</th></tr></thead>
+      <tbody>${playerRows}</tbody>
+    </table>
     <div class="scorecard-junk"><span class="jl">Junk</span>${badges}
     <span class="junk-score ${result.junk<0?'round-under':''}">${result.junk?fmtScore(result.junk):'—'}</span></div>`;
   return card;
