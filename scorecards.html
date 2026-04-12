@@ -43,6 +43,13 @@ nav a:hover,nav a.active{color:var(--masters-gold)}nav a.active::after{content:'
 .junk-badge{display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;font-size:.6rem;font-weight:700;border-radius:2px;color:var(--white)}
 .junk-badge.gj{background:var(--masters-gold);color:var(--augusta-dark)}.junk-badge.ca{background:var(--flag-red)}.junk-badge.sg{background:var(--forest-green)}.junk-badge.ace{background:var(--banner-green)}.junk-badge.sb{background:#8B6914}.junk-badge.empty{background:transparent;border:1px dashed #ccc;color:#ccc}
 .junk-score{margin-left:auto;font-weight:700;font-size:.9rem}
+.scorecard-junk-detail{border-top:2px solid var(--masters-gold);background:rgba(248,199,11,.05);padding:12px 18px}
+.junk-detail-header{display:flex;justify-content:space-between;font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin-bottom:8px;font-weight:700}
+.junk-detail-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:.85rem;color:var(--forest-green);border-bottom:1px solid rgba(0,93,29,.06)}
+.junk-detail-row span:last-child{font-weight:700}
+.junk-subtotal{display:flex;justify-content:space-between;padding:6px 0 2px;font-size:.85rem;color:#888;margin-top:4px}
+.junk-final-total{display:flex;justify-content:space-between;padding:6px 0 0;font-size:1rem;font-weight:900;border-top:2px solid var(--masters-gold);margin-top:4px;font-family:'Playfair Display',Georgia,serif}
+.pre-junk-score{font-size:.7rem;color:#999;text-align:right;margin-top:2px;font-style:italic}
 .loading{text-align:center;padding:60px;font-family:'Playfair Display',Georgia,serif;color:var(--forest-green);font-style:italic}
 .scoring-rules{max-width:1200px;margin:0 auto 20px;padding:0 24px;font-size:.8rem;color:#888;text-align:center;font-style:italic}
 .site-footer{background:var(--augusta-dark);border-top:4px solid var(--masters-gold);padding:32px 24px;text-align:center}
@@ -137,7 +144,7 @@ function resolveDNP(playerScores, round) {
 
 function calcTeamScore(team, scores) {
   const players = getTeamPlayers(team);
-  if (players.length === 0) return { total: null, junk: 0, final: null, dq: false, mcCount: 0, playerScores: [] };
+  if (players.length === 0) return { total: null, junk: 0, junkBreakdown: [], final: null, dq: false, mcCount: 0, playerScores: [] };
 
   const playerScores = players.map(name => {
     const s = scores[name] || { r1: null, r2: null, r3: null, r4: null };
@@ -146,7 +153,7 @@ function calcTeamScore(team, scores) {
 
   // Count missed cuts
   const mcCount = playerScores.filter(p => p.r3 === 'MC').length;
-  if (mcCount >= 3) return { total: 'DQ', junk: 0, final: 'DQ', dq: true, mcCount, playerScores };
+  if (mcCount >= 3) return { total: 'DQ', junk: 0, junkBreakdown: [], final: 'DQ', dq: true, mcCount, playerScores };
 
   // Apply DNP rule for R1 and R2 (use worst teammate score)
   const ps1 = resolveDNP(playerScores, 'r1');
@@ -166,22 +173,46 @@ function calcTeamScore(team, scores) {
   const hasScores = playerScores.some(p => p.r1 !== null);
   const total = hasScores ? r1Sum + r2Sum + r3Sum + r4Sum : null;
 
-  // Junk bonuses suppressed until all R4 scores are in
+  // Junk bonuses — only active after R4 scores are in
   let junk = 0;
+  const junkBreakdown = [];
   if (junkActive) {
     const junks = (team['Junks'] || '').toLowerCase();
-    if (junks.includes('sand') || junks.includes('sandbagger')) junk -= 5;
+
+    // Green Jacket: rostered Rory McIlroy (tournament winner) = -5
+    if (junks.includes('green jacket') && players.includes('Rory McIlroy')) {
+      junk -= 5;
+      junkBreakdown.push({ label: 'Green Jacket — Rory McIlroy', value: -5 });
+    }
+
+    // Choke Artist: rostered Rory McIlroy or Cameron Young = -5
+    if (junks.includes('choke artist') && (players.includes('Rory McIlroy') || players.includes('Cameron Young'))) {
+      const who = players.includes('Rory McIlroy') ? 'Rory McIlroy' : 'Cameron Young';
+      junk -= 5;
+      junkBreakdown.push({ label: `Choke Artist — ${who}`, value: -5 });
+    }
+
+    // Ace: rostered Shane Lowry (hole in one) = -15
+    if (junks.includes('ace') && players.includes('Shane Lowry')) {
+      junk -= 15;
+      junkBreakdown.push({ label: 'Ace — Shane Lowry (HIO)', value: -15 });
+    }
+
+    // Scratch Golfer: -5 per player with ALL 4 rounds even or better
     if (junks.includes('scratch')) {
       playerScores.forEach(p => {
         if (typeof p.r1 === 'number' && typeof p.r2 === 'number' && typeof p.r3 === 'number' && typeof p.r4 === 'number') {
-          if (Math.max(p.r1, p.r2, p.r3, p.r4) <= 0) junk -= 5;
+          if (Math.max(p.r1, p.r2, p.r3, p.r4) <= 0) {
+            junk -= 5;
+            junkBreakdown.push({ label: `Scratch Golfer — ${p.name}`, value: -5 });
+          }
         }
       });
     }
   }
 
   const final = total !== null ? total + junk : null;
-  return { total, junk, final, dq: false, mcCount, playerScores };
+  return { total, junk, junkBreakdown, final, dq: false, mcCount, playerScores };
 }
 
 function fmtScore(s) {
@@ -257,15 +288,23 @@ function renderScorecard(team, scores) {
     </tr>`;
   }).join('');
 
+  const junkSection = (junkActive && result.junkBreakdown && result.junkBreakdown.length > 0)
+    ? `<div class="scorecard-junk-detail">
+        <div class="junk-detail-header"><span>Junk Bonuses</span><span>Strokes</span></div>
+        ${result.junkBreakdown.map(j => `<div class="junk-detail-row"><span>${j.label}</span><span class="round-under">${j.value}</span></div>`).join('')}
+        <div class="junk-subtotal"><span>Pre-Junk Total</span><span class="${scoreClass(result.total)}">${fmtScore(result.total)}</span></div>
+        <div class="junk-final-total"><span>Final Score</span><span class="${scoreClass(result.final)}">${fmtScore(result.final)}</span></div>
+      </div>`
+    : `<div class="scorecard-junk"><span class="jl">Junk</span>${badges}<span class="junk-score">${result.junk ? fmtScore(result.junk) : '—'}</span></div>`;
+
   card.innerHTML = `
-    <div class="scorecard-header"><div><h3>${team['Team Name']}${result.dq?'<span style="color:var(--flag-red);font-size:.7rem;margin-left:8px">DQ</span>':''}</h3><span class="sc-owner">${team['Owner']||''}</span></div>
+    <div class="scorecard-header"><div><h3>${team['Team Name']}${result.dq?'<span style="color:var(--flag-red);font-size:.7rem;margin-left:8px">DQ</span>':''}</h3><span class="sc-owner">${team['Owner']||''}</span>${junkActive && result.junk ? `<div class="pre-junk-score">pre-junk: ${fmtScore(result.total)}</div>` : ''}</div>
     <div class="sc-total ${totalCls}">${fmtScore(result.final)}</div></div>
     <table class="scorecard-table">
       <thead><tr><th>Player</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Total</th></tr></thead>
       <tbody>${playerRows}</tbody>
     </table>
-    <div class="scorecard-junk"><span class="jl">Junk</span>${badges}
-    <span class="junk-score ${result.junk<0?'round-under':''}">${result.junk?fmtScore(result.junk):'—'}</span></div>`;
+    ${junkSection}`;
   return card;
 }
 

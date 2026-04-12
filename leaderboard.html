@@ -140,7 +140,7 @@ function resolveDNP(playerScores, round) {
 
 function calcTeamScore(team, scores) {
   const players = getTeamPlayers(team);
-  if (players.length === 0) return { total: null, junk: 0, final: null, dq: false, mcCount: 0, playerScores: [] };
+  if (players.length === 0) return { total: null, junk: 0, junkBreakdown: [], final: null, dq: false, mcCount: 0, playerScores: [] };
 
   const playerScores = players.map(name => {
     const s = scores[name] || { r1: null, r2: null, r3: null, r4: null };
@@ -149,7 +149,7 @@ function calcTeamScore(team, scores) {
 
   // Count missed cuts
   const mcCount = playerScores.filter(p => p.r3 === 'MC').length;
-  if (mcCount >= 3) return { total: 'DQ', junk: 0, final: 'DQ', dq: true, mcCount, playerScores };
+  if (mcCount >= 3) return { total: 'DQ', junk: 0, junkBreakdown: [], final: 'DQ', dq: true, mcCount, playerScores };
 
   // Apply DNP rule for R1 and R2 (use worst teammate score)
   const ps1 = resolveDNP(playerScores, 'r1');
@@ -169,22 +169,46 @@ function calcTeamScore(team, scores) {
   const hasScores = playerScores.some(p => p.r1 !== null);
   const total = hasScores ? r1Sum + r2Sum + r3Sum + r4Sum : null;
 
-  // Junk bonuses suppressed until all R4 scores are in
+  // Junk bonuses — only active after R4 scores are in
   let junk = 0;
+  const junkBreakdown = [];
   if (junkActive) {
     const junks = (team['Junks'] || '').toLowerCase();
-    if (junks.includes('sand') || junks.includes('sandbagger')) junk -= 5;
+
+    // Green Jacket: rostered Rory McIlroy (tournament winner) = -5
+    if (junks.includes('green jacket') && players.includes('Rory McIlroy')) {
+      junk -= 5;
+      junkBreakdown.push({ label: 'Green Jacket — Rory McIlroy', value: -5 });
+    }
+
+    // Choke Artist: rostered Rory McIlroy or Cameron Young = -5
+    if (junks.includes('choke artist') && (players.includes('Rory McIlroy') || players.includes('Cameron Young'))) {
+      const who = players.includes('Rory McIlroy') ? 'Rory McIlroy' : 'Cameron Young';
+      junk -= 5;
+      junkBreakdown.push({ label: `Choke Artist — ${who}`, value: -5 });
+    }
+
+    // Ace: rostered Shane Lowry (hole in one) = -15
+    if (junks.includes('ace') && players.includes('Shane Lowry')) {
+      junk -= 15;
+      junkBreakdown.push({ label: 'Ace — Shane Lowry (HIO)', value: -15 });
+    }
+
+    // Scratch Golfer: -5 per player with ALL 4 rounds even or better
     if (junks.includes('scratch')) {
       playerScores.forEach(p => {
         if (typeof p.r1 === 'number' && typeof p.r2 === 'number' && typeof p.r3 === 'number' && typeof p.r4 === 'number') {
-          if (Math.max(p.r1, p.r2, p.r3, p.r4) <= 0) junk -= 5;
+          if (Math.max(p.r1, p.r2, p.r3, p.r4) <= 0) {
+            junk -= 5;
+            junkBreakdown.push({ label: `Scratch Golfer — ${p.name}`, value: -5 });
+          }
         }
       });
     }
   }
 
   const final = total !== null ? total + junk : null;
-  return { total, junk, final, dq: false, mcCount, playerScores };
+  return { total, junk, junkBreakdown, final, dq: false, mcCount, playerScores };
 }
 
 function fmtScore(s) {
