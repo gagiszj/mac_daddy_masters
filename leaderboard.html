@@ -205,6 +205,13 @@ function calcTeamScore(team, scores) {
         }
       });
     }
+
+    // Sandbagger: skipped Tier 1 pick and bought Sandbagger = -5
+    const isSB = (team['Sand Bagger'] || '').toUpperCase() === 'YES';
+    if (isSB && (junks.includes('sandbagger') || junks.includes('sand bagger'))) {
+      junk -= 5;
+      junkBreakdown.push({ label: 'Sandbagger — skipped Tier 1', value: -5 });
+    }
   }
 
   const final = total !== null ? total + junk : null;
